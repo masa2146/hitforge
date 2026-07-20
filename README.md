@@ -44,7 +44,7 @@ HitForge is a Claude Code plugin. This repository is its own marketplace, so ins
 two commands inside Claude Code:
 
 ```
-/plugin marketplace add masa2146/hitforge
+/plugin marketplace add https://github.com/masa2146/hitforge
 /plugin install hitforge@hitforge
 ```
 
