@@ -110,8 +110,26 @@ evidence-backed *"why now?"*. **No filler** — if only three ideas clear the ba
 three cards.
 
 Every card gets a **signal tag**: `NEW-HOT` (just exploded), `RISING` (climbing 3–6mo,
-the ideal entry), `EVERGREEN` (solid 12mo+, crowded), or `COOLING` (declining → not
-carded).
+the ideal entry), `EVERGREEN` (solid 12mo+, crowded), `COOLING` (declining → not carded),
+or `SYNTHESIS` (a fused concept — see below).
+
+---
+
+## Synthesis cards & card images
+
+After the evidence-gated cards, `/market-scan` runs a **synthesis** step (Step 2.5): it
+crosses the fingerprints of the passing cards to forge 1–2 **`SYNTHESIS`** concepts — a
+proven mechanic family plus a differentiating layer (meta, theme, or a second mechanic)
+from another card. A synthesis card is honest about being unproven: it carries `parents`,
+a one-paragraph `why_combination`, a `visual_preview`, and the fixed note
+*"market-unvalidated combination — evidence inherited from parents."* It is scored but is
+**never the "top pick"**, and if no sensible combination exists the step produces **zero**
+synthesis cards.
+
+Any card may also carry an optional **`images`** array (`{src, caption}`) that renders as a
+thumbnail strip (click opens in a new tab). **HitForge never auto-downloads reference-game
+store screenshots** — copyright, and your repo may be public; the store link is enough. The
+`images` field is for screenshots you add yourself, or visuals produced during `/creatives`.
 
 ---
 

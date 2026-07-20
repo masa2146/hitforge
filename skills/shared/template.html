@@ -24,6 +24,7 @@
     --sig-rising:#2fd07a;   /* RISING   → green         */
     --sig-evergreen:#3d8bff;/* EVERGREEN→ blue          */
     --sig-revisit:#b06bff;  /* REVISIT  → purple        */
+    --sig-synthesis:#1fd6c4;/* SYNTHESIS→ turquoise      */
     --st-pending:#7c8a99; --st-approved:#2fd07a; --st-rejected:#ff5470; --st-revisit:#b06bff;
 
     --r-sm:6px; --r-md:11px; --r-lg:15px;
@@ -154,6 +155,29 @@
     font-family:var(--mono);font-size:9.5px;font-weight:800;letter-spacing:1px;padding:4px 34px;
     text-transform:uppercase;box-shadow:0 3px 10px -3px rgba(0,0,0,.6)}
 
+  /* synthesis (fused) plates */
+  .plate.synthesis{border-color:rgba(31,214,196,.42)}
+  .plate.synthesis .plate-head{background:linear-gradient(180deg,rgba(31,214,196,.07),transparent)}
+  .parents{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-family:var(--mono);
+    font-size:10.5px;color:var(--sig-synthesis);letter-spacing:.3px}
+  .parents .p{background:rgba(31,214,196,.1);border:1px solid rgba(31,214,196,.32);
+    border-radius:4px;padding:1px 7px}
+  .evidence.syn{border-left-color:var(--sig-synthesis);
+    background:linear-gradient(90deg,rgba(31,214,196,.1),transparent);color:#c9efe9}
+  .evidence.syn .ev-tag{color:var(--sig-synthesis)}
+  .combo{font-size:12.5px;color:#d7dee7;background:var(--steel-3);border:1px solid var(--line);
+    border-radius:var(--r-sm);padding:10px 12px;line-height:1.55}
+  .combo .ev-tag{color:var(--gold)}
+  .preview{font-size:12px;color:var(--muted);font-style:italic;border:1px dashed var(--line2);
+    border-radius:var(--r-sm);padding:9px 12px;line-height:1.5}
+  .preview .ev-tag{color:var(--ember);font-style:normal}
+  /* image thumbnails (optional) */
+  .thumbs{display:flex;gap:8px;flex-wrap:wrap}
+  .thumbs a{display:block;width:76px;height:76px;border:1px solid var(--line);
+    border-radius:var(--r-sm);overflow:hidden;background:var(--steel-3)}
+  .thumbs a:hover{border-color:var(--ember)}
+  .thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+
   .plate-head{padding:17px 17px 13px;border-bottom:1px solid var(--line);position:relative;z-index:1}
   .ph-row{display:flex;justify-content:space-between;gap:11px;align-items:flex-start}
   .ptitle{margin:0;font-size:17.5px;font-weight:700;line-height:1.25;max-width:63%;letter-spacing:-.2px}
@@ -256,6 +280,7 @@
       <span style="color:var(--sig-rising)"><b></b>RISING</span>
       <span style="color:var(--sig-evergreen)"><b></b>EVERGREEN</span>
       <span style="color:var(--sig-revisit)"><b></b>REVISIT</span>
+      <span style="color:var(--sig-synthesis)"><b></b>SYNTHESIS</span>
     </div>
   </header>
 
@@ -298,8 +323,8 @@
 <script id="hitforge-data" type="application/json">
 {
   "scan_date": "2026-07-20",
-  "summary": { "card_count": 3, "eliminated_count": 2,
-               "signals": { "NEW-HOT": 1, "RISING": 1, "EVERGREEN": 1 } },
+  "summary": { "card_count": 4, "eliminated_count": 2,
+               "signals": { "NEW-HOT": 1, "RISING": 1, "EVERGREEN": 1, "SYNTHESIS": 1 } },
   "cards": [
     {
       "id": "conveyor-sort-shooter",
@@ -360,6 +385,32 @@
       ],
       "source": "auto",
       "similar_to": "merge-number-chain"
+    },
+    {
+      "id": "conveyor-sort-merge-tycoon",
+      "title": "Conveyor Sort → Merge Tycoon",
+      "status": "pending",
+      "signal": "SYNTHESIS",
+      "parents": ["conveyor-sort-shooter", "tile-merge-tycoon"],
+      "signal_evidence": "market-unvalidated combination — evidence inherited from parents (conveyor-sort-shooter RISING + tile-merge-tycoon EVERGREEN).",
+      "why_combination": "conveyor-sort-shooter has a 3-second-readable action hook but shallow meta (meta 3); tile-merge-tycoon owns a proven idle/merge economy (meta 5) but a weak video hook (video 3). Fusing them lets the readable sorting action feed a merge-and-idle economy — the hook that sells the ad plus the meta that retains and monetizes.",
+      "visual_preview": "Top-down glossy conveyor in warm amber light; sorted items drop into bins and visibly fuse into glowing numbered merge-tiles. Flat-vector art, high-contrast palette (teal belt, orange items, soft rim light). Bottom third: an idle-cash counter ticking up.",
+      "mechanic": "Sort items on a conveyor into the right bins; each correct bin spawns a numbered merge-tile. Merge tiles to grow an idle cash economy that funds faster belts and new bins.",
+      "fingerprint": ["conveyor","sort","merge","idle"],
+      "reference_games": ["Sample Sorter (parent)", "Merge Empire (parent)"],
+      "scores": { "video_clarity": 4, "production_ease": 3, "competition_gap": 4, "meta_potential": 5 },
+      "cpi_range": "$0.35–0.65 (inherited estimate)",
+      "target_market": "US / Tier-1 payers",
+      "risks": ["Two systems = more build scope than either parent", "Unproven fusion — validate the combined loop with a playable before scaling ad spend"],
+      "sources": [
+        { "label": "(inherited) conveyor-sort-shooter — Sensor Tower puzzle risers", "url": "https://example.com/a", "date": "2026-07-05" },
+        { "label": "(inherited) tile-merge-tycoon — data.ai top grossing", "url": "https://example.com/e", "date": "2026-07-08" }
+      ],
+      "source": "auto",
+      "similar_to": "tile-merge-tycoon",
+      "images": [
+        { "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='200' height='200' fill='%23161b23'/%3E%3Crect y='150' width='200' height='6' fill='%231fd6c4'/%3E%3Ccircle cx='55' cy='120' r='13' fill='%23ff9f1c'/%3E%3Ccircle cx='100' cy='120' r='13' fill='%232fd07a'/%3E%3Ccircle cx='145' cy='120' r='13' fill='%233d8bff'/%3E%3Ctext x='100' y='46' fill='%23eef2f6' font-family='monospace' font-size='15' text-anchor='middle'%3ESORT%20%E2%86%92%20MERGE%3C/text%3E%3C/svg%3E", "caption": "Illustrative preview (generated placeholder, not a store asset)" }
+      ]
     }
   ],
   "eliminated": [
@@ -377,7 +428,8 @@
     '<div class="empty">Invalid data JSON: '+e.message+'</div>'; return; }
 
   var SIG = { "NEW-HOT":getCss('--sig-newhot'), "RISING":getCss('--sig-rising'),
-              "EVERGREEN":getCss('--sig-evergreen'), "REVISIT":getCss('--sig-revisit') };
+              "EVERGREEN":getCss('--sig-evergreen'), "REVISIT":getCss('--sig-revisit'),
+              "SYNTHESIS":getCss('--sig-synthesis') };
   var STA = { pending:getCss('--st-pending'), approved:getCss('--st-approved'),
               rejected:getCss('--st-rejected'), revisit:getCss('--st-revisit') };
   var SLABEL = { video_clarity:"Video clarity", production_ease:"Production ease",
@@ -390,7 +442,10 @@
   function domain(u){ try{ return new URL(u).hostname.replace(/^www\./,''); }catch(e){ return ''; } }
 
   var cards = data.cards||[];
-  var topId = cards.reduce(function(best,c){ return (!best||total(c)>total(best))?c:best; }, null);
+  // Top pick = highest heat among EVIDENCE-BACKED cards; a market-unvalidated
+  // SYNTHESIS card never claims the ribbon.
+  var topId = cards.filter(function(c){ return c.signal!=='SYNTHESIS'; })
+    .reduce(function(best,c){ return (!best||total(c)>total(best))?c:best; }, null);
   topId = topId ? topId.id : null;
 
   // ---- subtitle + summary ----
@@ -426,7 +481,7 @@
       c.appendChild(b);
     });
   }
-  mkPills('signalFilters','signal',['ALL','NEW-HOT','RISING','EVERGREEN','REVISIT']);
+  mkPills('signalFilters','signal',['ALL','NEW-HOT','RISING','EVERGREEN','REVISIT','SYNTHESIS']);
   mkPills('statusFilters','status',['ALL','pending','approved','rejected','revisit']);
 
   document.getElementById('q').addEventListener('input', function(e){ state.q=e.target.value.toLowerCase().trim(); render(); });
@@ -447,7 +502,14 @@
         '</a> '+(d?'<span class="d">'+d+'</span> ':'')+'<span class="d">('+esc(s.date)+')</span></div>'; }).join('');
     var sim=c.similar_to?'<div class="sim">⚠ similar to <b>'+esc(c.similar_to)+'</b> — check it is genuinely distinct</div>':'';
     var manual=(c.source==='manual entry')?' <span class="manual">manual</span>':'';
-    return '<article class="plate'+(isTop?' top':'')+'" style="--i:'+i+'" data-signal="'+esc(c.signal)+'" data-status="'+esc(c.status)+'">'+
+    var isSyn=c.signal==='SYNTHESIS';
+    var parents=(c.parents&&c.parents.length)
+      ? '<div class="parents">⚒ forged from '+c.parents.map(function(p){return '<span class="p">'+esc(p)+'</span>';}).join(' + ')+'</div>' : '';
+    var combo=c.why_combination?'<div class="combo"><span class="ev-tag">Why combine</span>'+esc(c.why_combination)+'</div>':'';
+    var preview=c.visual_preview?'<div class="preview"><span class="ev-tag">Visual preview</span>'+esc(c.visual_preview)+'</div>':'';
+    var thumbs=(c.images&&c.images.length)
+      ? '<div class="thumbs">'+c.images.map(function(im){return '<a href="'+esc(im.src)+'" target="_blank" rel="noopener" title="'+esc(im.caption||'')+'"><img src="'+esc(im.src)+'" alt="'+esc(im.caption||'')+'" loading="lazy"></a>';}).join('')+'</div>' : '';
+    return '<article class="plate'+(isTop?' top':'')+(isSyn?' synthesis':'')+'" style="--i:'+i+'" data-signal="'+esc(c.signal)+'" data-status="'+esc(c.status)+'">'+
       (isTop?'<div class="ribbon">Top pick</div>':'')+
       '<div class="plate-head"><div class="ph-row">'+
         '<h3 class="ptitle">'+esc(c.title)+'</h3>'+
@@ -455,9 +517,13 @@
       '</div><div class="idrow"><span class="pid">'+esc(c.id)+'</span>'+manual+
         '<button class="copy" data-id="'+esc(c.id)+'">⧉ /spec</button></div></div>'+
       '<div class="plate-body">'+
-        '<div class="evidence"><span class="ev-tag">Signal</span>'+esc(c.signal_evidence||'')+'</div>'+
+        '<div class="evidence'+(isSyn?' syn':'')+'"><span class="ev-tag">'+(isSyn?'Inherited':'Signal')+'</span>'+esc(c.signal_evidence||'')+'</div>'+
+        parents+
         '<p class="mech">'+esc(c.mechanic||'')+'</p>'+
+        combo+
         '<div class="fp">'+fps+'</div>'+sim+
+        preview+
+        thumbs+
         '<div class="scores"><div class="sc-head"><span class="sc-t">Heat score</span>'+
           '<span class="sc-v"><b>'+total(c)+'</b>/20</span></div>'+scoreRows+'</div>'+
       '</div>'+

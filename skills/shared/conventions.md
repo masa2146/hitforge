@@ -38,8 +38,9 @@ Each line has exactly these fields:
 | `status` | string | one of `pending` / `approved` / `rejected` / `revisit` (see §4). |
 | `scores` | object | `{ "video_clarity": n, "production_ease": n, "competition_gap": n, "meta_potential": n }`, each 1–5. |
 | `summary` | string | one-line human summary of the concept (in session language is fine). |
-| `signal` | string | signal tag: `NEW-HOT` / `RISING` / `EVERGREEN` / `REVISIT`. |
+| `signal` | string | signal tag: `NEW-HOT` / `RISING` / `EVERGREEN` / `REVISIT` / `SYNTHESIS` (see §6). |
 | `source` | string | `"auto"` (default) or `"manual entry"` for `--manual` scans. |
+| `parents` | string[]? | present only when `signal` is `SYNTHESIS`; the parent card ids this concept was fused from (see §6). |
 | `reject_reason` | string? | present only when `status` is `rejected` or `revisit`; why it was rejected. |
 | `revisit_reason` | string? | present only when `status` is `revisit`; what concrete new signal changed. |
 
@@ -135,13 +136,13 @@ does not regenerate the HTML/CSS/JS. The dashboard (`docs/pipeline-dashboard.htm
 {
   "scan_date": "YYYY-MM-DD",
   "summary": { "card_count": 0, "eliminated_count": 0,
-               "signals": { "NEW-HOT": 0, "RISING": 0, "EVERGREEN": 0 } },
+               "signals": { "NEW-HOT": 0, "RISING": 0, "EVERGREEN": 0, "SYNTHESIS": 0 } },
   "cards": [
     {
       "id": "kebab-id",
       "title": "Human title",
       "status": "pending|approved|rejected|revisit",
-      "signal": "NEW-HOT|RISING|EVERGREEN",
+      "signal": "NEW-HOT|RISING|EVERGREEN|SYNTHESIS",
       "signal_evidence": "dated one-liner justifying the tag",
       "mechanic": "2-sentence mechanic summary",
       "fingerprint": ["kw1","kw2","kw3"],
@@ -153,18 +154,31 @@ does not regenerate the HTML/CSS/JS. The dashboard (`docs/pipeline-dashboard.htm
       "risks": ["risk 1", "risk 2"],
       "sources": [ { "label": "Sensor Tower — ...", "url": "https://...", "date": "YYYY-MM-DD" } ],
       "source": "auto|manual entry",
-      "similar_to": null
+      "similar_to": null,
+
+      "parents": ["parent-id-a", "parent-id-b"],
+      "why_combination": "SYNTHESIS only — one paragraph: which parent's strength covers which parent's weakness.",
+      "visual_preview": "SYNTHESIS only — 2-3 sentence style-core miniature so the idea can be pictured before approval.",
+
+      "images": [ { "src": "path-or-url", "caption": "optional caption" } ]
     }
   ],
   "eliminated": [ { "id": "kebab-id", "reason": "already rejected (2026-05-01)" } ]
 }
 ```
 
+**Optional fields:** `parents`, `why_combination`, `visual_preview` appear **only on
+`SYNTHESIS` cards** (see §6). `images` is optional on any card — a strip of thumbnails
+(`src` = local path or URL, click opens in a new tab). If `images` is absent or empty the
+template renders nothing. `src` is **never auto-downloaded** by the skill (copyright; the
+repo may be public) — it is user-added or produced during the creative-prompts stage.
+
 ### Signal badge colors (consistent everywhere)
 - `RISING` → green
 - `NEW-HOT` → orange
 - `EVERGREEN` → blue
 - `REVISIT` → purple
+- `SYNTHESIS` → turquoise
 
 ### Dashboard JSON block schema (`pipeline-dashboard.html`)
 ```json
@@ -181,3 +195,29 @@ does not regenerate the HTML/CSS/JS. The dashboard (`docs/pipeline-dashboard.htm
 ```
 The `stage` field is the furthest pipeline step reached:
 `scanned` → `approved` → `spec` (spec.md exists) → `creatives` (creatives written).
+
+---
+
+## 6. Synthesis cards (`signal: "SYNTHESIS"`)
+
+A **synthesis card** fuses a *proven mechanic family* from one card with a *differentiating
+layer* (meta, theme, or a second mechanic) from another. It is produced in market-scan
+**Step 2.5**, only after the evidence-gated cards exist. Rules:
+
+- **`signal: "SYNTHESIS"`** — its own tag; renders in turquoise everywhere.
+- **`parents` is mandatory** — the ids of the cards it was fused from.
+- **It may NOT claim its own market evidence.** Its `signal_evidence` references the
+  parents' evidence and **must contain the exact phrase**
+  `market-unvalidated combination — evidence inherited from parents`
+  (render it in the report's language, but keep the meaning verbatim).
+- **It is still scored**, but the `competition_gap` justification is the *researched* answer
+  to "does anyone already ship this combination?" (link it if such a game exists).
+- **`why_combination`** — one paragraph: which parent's weakness is covered by which
+  parent's strength (e.g. parent A's shallow meta + parent B's proven meta layer).
+- **`visual_preview`** — a 2-3 sentence miniature of the creative-prompts `style-core`
+  format, so the user can picture the idea before approving.
+- **Written to `idea-history.jsonl` like any card** — `mechanic_fingerprint` is the fused
+  set; the §3 dedupe rules apply unchanged (a synthesis naturally resembles its parents, so
+  expect a `0.3–0.5` "similar" flag; `≥0.5` against a *non-parent* still blocks it).
+- **No filler.** Synthesis count is never padded — if no sensible combination exists,
+  **zero synthesis cards is correct**, and the report says so.

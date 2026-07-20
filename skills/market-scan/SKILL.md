@@ -94,6 +94,28 @@ Card fields (write into `docs/research/YYYY-MM-DD-concepts.md`):
 uncertainty explicitly in the card. Candidates that fail the bar go in a one-line
 **"Eliminated"** section at the end with the reason.
 
+## Step 2.5 — Synthesis cards (SYNTHESIS)
+
+**After** the evidence-gated cards exist, cross the mechanic fingerprints of those cards
+to forge **1–2 synthesis concepts**: a *proven mechanic family* from one card + a
+*differentiating layer* (meta, theme, or a second mechanic) from another. Follow the full
+rules in `${CLAUDE_PLUGIN_ROOT}/skills/shared/conventions.md` §6. In short:
+
+- `signal: "SYNTHESIS"` (renders turquoise); **`parents` (parent ids) is mandatory**.
+- **No own market evidence.** `signal_evidence` references the parents' evidence and must
+  contain the exact phrase `market-unvalidated combination — evidence inherited from parents`
+  (in the report's language, meaning verbatim).
+- **Scored** like any card, but the `competition_gap` justification is the *researched*
+  answer to "does anyone already ship this combination?" (link it if a game exists).
+- **`why_combination`** — one paragraph: which parent's weakness is covered by which
+  parent's strength.
+- **`visual_preview`** — a 2-3 sentence miniature of the creative-prompts `style-core`
+  format, so the idea can be pictured before approval.
+- Written to `idea-history.jsonl` like any card (`mechanic_fingerprint` = the fused set);
+  the §3 dedupe rules apply unchanged.
+- **No filler:** if no sensible combination exists, produce **zero** synthesis cards and
+  say so in the report. Never pad the count.
+
 ## Step 3 — Output
 
 1. Write the **markdown report** `docs/research/YYYY-MM-DD-concepts.md` — this is the
