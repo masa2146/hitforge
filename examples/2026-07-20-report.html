@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HitForge — Market Scan Report</title>
+<style>
+  :root{
+    --bg:#0f1419; --panel:#1a212b; --panel2:#222c38; --line:#2c3846;
+    --text:#e7edf3; --muted:#94a3b8; --accent:#38bdf8;
+    --green:#22c55e; --orange:#f59e0b; --blue:#3b82f6; --purple:#a855f7;
+    --red:#ef4444; --gray:#64748b;
+    --bar:#334155;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--accent)}
+  .wrap{max-width:1200px;margin:0 auto;padding:24px 18px 60px}
+  header h1{margin:0 0 4px;font-size:24px;letter-spacing:.3px}
+  header .sub{color:var(--muted);font-size:13px}
+  /* summary strip */
+  .summary{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0 8px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:12px 16px;min-width:120px;flex:1}
+  .stat .n{font-size:22px;font-weight:700}
+  .stat .l{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  .sigdist{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .sigchip{font-size:11px;padding:2px 8px;border-radius:999px;font-weight:600}
+  /* filters */
+  .filters{display:flex;flex-wrap:wrap;gap:16px;margin:20px 0 14px;align-items:center}
+  .fgroup{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .fgroup .lbl{color:var(--muted);font-size:12px;margin-right:2px}
+  .fbtn{background:var(--panel);border:1px solid var(--line);color:var(--text);
+    padding:5px 12px;border-radius:999px;font-size:12px;cursor:pointer}
+  .fbtn.active{background:var(--accent);border-color:var(--accent);color:#04222e;font-weight:700}
+  /* grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-top:8px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;
+    display:flex;flex-direction:column;gap:10px}
+  .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .card h3{margin:0;font-size:17px}
+  .card .id{color:var(--muted);font-size:11px;font-family:ui-monospace,Menlo,monospace}
+  .badges{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.4px}
+  .evidence{font-size:12px;color:var(--muted);font-style:italic;border-left:2px solid var(--line);padding-left:8px}
+  .mech{font-size:13.5px}
+  .fp{display:flex;gap:5px;flex-wrap:wrap}
+  .fp span{background:var(--panel2);border:1px solid var(--line);font-size:10px;
+    padding:2px 7px;border-radius:6px;font-family:ui-monospace,Menlo,monospace;color:var(--muted)}
+  .scores{display:flex;flex-direction:column;gap:5px}
+  .score{display:grid;grid-template-columns:120px 1fr 22px;align-items:center;gap:8px;font-size:11.5px}
+  .score .track{background:var(--bar);height:8px;border-radius:999px;overflow:hidden}
+  .score .fill{height:100%;border-radius:999px;background:var(--accent)}
+  .kv{font-size:12.5px;color:var(--muted)}
+  .kv b{color:var(--text);font-weight:600}
+  .risks{margin:0;padding-left:16px;font-size:12.5px;color:var(--muted)}
+  .risks li{margin:2px 0}
+  .sources{display:flex;flex-direction:column;gap:3px;font-size:11.5px}
+  .sim{font-size:11.5px;color:var(--orange)}
+  .total{font-size:12px;color:var(--muted)}
+  .total b{color:var(--text);font-size:15px}
+  /* eliminated */
+  details.elim{margin-top:26px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px 16px}
+  details.elim summary{cursor:pointer;padding:12px 0;font-weight:600}
+  details.elim ul{margin:0 0 12px;padding-left:18px;color:var(--muted);font-size:13px}
+  .manual{font-size:10px;color:var(--purple);border:1px dashed var(--purple);padding:1px 6px;border-radius:6px}
+  .empty{color:var(--muted);padding:30px;text-align:center}
+  @media (max-width:520px){ .score{grid-template-columns:96px 1fr 22px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🔨 HitForge — Market Scan</h1>
+    <div class="sub" id="subtitle"></div>
+  </header>
+
+  <section class="summary" id="summary"></section>
+
+  <div class="filters">
+    <div class="fgroup" id="signalFilters"><span class="lbl">Signal</span></div>
+    <div class="fgroup" id="statusFilters"><span class="lbl">Status</span></div>
+  </div>
+
+  <section class="grid" id="grid"></section>
+
+  <details class="elim" id="elimBox">
+    <summary>Eliminated &amp; previously rejected (<span id="elimCount">0</span>)</summary>
+    <ul id="elimList"></ul>
+  </details>
+</div>
+
+<!-- ============================================================= -->
+<!-- DATA: to fill a report, replace ONLY this JSON block.          -->
+<!-- Schema: see .claude/skills/shared/conventions.md §5           -->
+<!-- ============================================================= -->
+<script id="hitforge-data" type="application/json">
+{
+  "scan_date": "2026-07-20",
+  "summary": { "card_count": 3, "eliminated_count": 2,
+               "signals": { "NEW-HOT": 1, "RISING": 1, "EVERGREEN": 1 } },
+  "cards": [
+    {
+      "id": "conveyor-sort-shooter",
+      "title": "Conveyor Sort Shooter",
+      "status": "pending",
+      "signal": "RISING",
+      "signal_evidence": "Climbing US puzzle charts steadily over the last 4 months (sample data).",
+      "mechanic": "Items ride a conveyor belt toward color bins. You shoot each item so it lands in the matching bin before the belt overflows.",
+      "fingerprint": ["conveyor","shoot","sort"],
+      "reference_games": ["Sample Sorter", "Belt Blaster"],
+      "scores": { "video_clarity": 5, "production_ease": 4, "competition_gap": 3, "meta_potential": 3 },
+      "cpi_range": "$0.30–0.55",
+      "target_market": "US / Tier-1",
+      "risks": ["Color-only sorting may feel shallow past level 20", "Crowded sorter genre"],
+      "sources": [
+        { "label": "Sensor Tower — Puzzle risers (sample)", "url": "https://example.com/a", "date": "2026-07-05" },
+        { "label": "AppMagic — chart delta (sample)", "url": "https://example.com/b", "date": "2026-06-18" }
+      ],
+      "source": "auto",
+      "similar_to": null
+    },
+    {
+      "id": "magnet-crowd-runner",
+      "title": "Magnet Crowd Runner",
+      "status": "approved",
+      "signal": "NEW-HOT",
+      "signal_evidence": "Two creatives crossed 3M TikTok views in the last 3 weeks (sample data).",
+      "mechanic": "You run forward pulling a magnet; matching-color people snap to your crowd while wrong colors bounce off. Reach the gate with the biggest crowd.",
+      "fingerprint": ["run","crowd","pull","magnet"],
+      "reference_games": ["Crowd Rush", "Magnet Dash"],
+      "scores": { "video_clarity": 5, "production_ease": 3, "competition_gap": 4, "meta_potential": 4 },
+      "cpi_range": "$0.25–0.45",
+      "target_market": "US + BR / broad",
+      "risks": ["Crowd physics can get expensive on low-end devices", "Fast-cooling hype cycle"],
+      "sources": [
+        { "label": "Meta Ad Library — magnet runner cluster (sample)", "url": "https://example.com/c", "date": "2026-07-12" },
+        { "label": "TikTok Creative Center (sample)", "url": "https://example.com/d", "date": "2026-07-01" }
+      ],
+      "source": "auto",
+      "similar_to": null
+    },
+    {
+      "id": "tile-merge-tycoon",
+      "title": "Tile Merge Tycoon",
+      "status": "pending",
+      "signal": "EVERGREEN",
+      "signal_evidence": "Merge-tycoon hybrids have held top-grossing puzzle slots for 14+ months (sample data).",
+      "mechanic": "Merge numbered tiles to earn cash, then reinvest cash to unlock faster generators. Idle income accrues while away.",
+      "fingerprint": ["merge","number","idle","tycoon"],
+      "reference_games": ["Merge Empire", "Tile Tycoon"],
+      "scores": { "video_clarity": 3, "production_ease": 4, "competition_gap": 2, "meta_potential": 5 },
+      "cpi_range": "$0.50–0.90",
+      "target_market": "US / Tier-1 payers",
+      "risks": ["Very saturated — differentiation is hard", "Weaker 3-second hook than action concepts"],
+      "sources": [
+        { "label": "data.ai — top grossing puzzle (sample)", "url": "https://example.com/e", "date": "2026-07-08" },
+        { "label": "Sensor Tower — 12mo retention (sample)", "url": "https://example.com/f", "date": "2026-05-20" }
+      ],
+      "source": "auto",
+      "similar_to": "merge-number-chain"
+    }
+  ],
+  "eliminated": [
+    { "id": "color-water-sort", "reason": "already rejected (2026-05-01) — J≈0.66 vs prior card" },
+    { "id": "hex-flip-cooling", "reason": "COOLING — peaked 8 months ago, declining" }
+  ]
+}
+</script>
+
+<script>
+(function(){
+  var data;
+  try { data = JSON.parse(document.getElementById('hitforge-data').textContent); }
+  catch(e){ document.getElementById('grid').innerHTML =
+    '<div class="empty">Invalid data JSON: '+e.message+'</div>'; return; }
+
+  var SIG_COLOR = { "NEW-HOT":"var(--orange)", "RISING":"var(--green)",
+                    "EVERGREEN":"var(--blue)", "REVISIT":"var(--purple)" };
+  var STATUS_COLOR = { pending:"var(--gray)", approved:"var(--green)",
+                       rejected:"var(--red)", revisit:"var(--purple)" };
+  var SCORE_LABELS = { video_clarity:"Video clarity", production_ease:"Production ease",
+                       competition_gap:"Competition gap", meta_potential:"Meta potential" };
+
+  function badge(text,color){
+    return '<span class="badge" style="background:'+color+'22;color:'+color+
+           ';border:1px solid '+color+'55">'+text+'</span>';
+  }
+  function total(c){ var s=c.scores; return s.video_clarity+s.production_ease+
+    s.competition_gap+s.meta_potential; }
+
+  // subtitle + summary strip
+  document.getElementById('subtitle').textContent =
+    'Scan date ' + data.scan_date + ' · ' + data.summary.card_count + ' cards · ' +
+    data.summary.eliminated_count + ' eliminated';
+
+  var sig = data.summary.signals || {};
+  var sigChips = Object.keys(sig).map(function(k){
+    return '<span class="sigchip" style="background:'+(SIG_COLOR[k]||'#555')+
+      '22;color:'+(SIG_COLOR[k]||'#999')+'">'+k+' '+sig[k]+'</span>'; }).join('');
+  document.getElementById('summary').innerHTML =
+    '<div class="stat"><div class="n">'+data.summary.card_count+'</div><div class="l">Cards</div></div>'+
+    '<div class="stat"><div class="n">'+data.summary.eliminated_count+'</div><div class="l">Eliminated</div></div>'+
+    '<div class="stat"><div class="l">Signal distribution</div><div class="sigdist">'+sigChips+'</div></div>';
+
+  // filter state
+  var state = { signal:"ALL", status:"ALL" };
+  function mkFilters(containerId, key, values){
+    var c = document.getElementById(containerId);
+    values.forEach(function(v){
+      var b = document.createElement('button');
+      b.className = 'fbtn' + (v==="ALL" ? ' active':'');
+      b.textContent = v==="ALL" ? "All" : v;
+      b.onclick = function(){
+        state[key]=v;
+        Array.prototype.forEach.call(c.querySelectorAll('.fbtn'),function(x){x.classList.remove('active');});
+        b.classList.add('active'); render();
+      };
+      c.appendChild(b);
+    });
+  }
+  mkFilters('signalFilters','signal',["ALL","NEW-HOT","RISING","EVERGREEN","REVISIT"]);
+  mkFilters('statusFilters','status',["ALL","pending","approved","rejected","revisit"]);
+
+  function cardHTML(c){
+    var scoreRows = Object.keys(SCORE_LABELS).map(function(k){
+      var v = c.scores[k]||0, pct=(v/5*100);
+      return '<div class="score"><span>'+SCORE_LABELS[k]+'</span>'+
+        '<span class="track"><span class="fill" style="width:'+pct+'%"></span></span>'+
+        '<span>'+v+'/5</span></div>';
+    }).join('');
+    var fps = (c.fingerprint||[]).map(function(f){return '<span>'+f+'</span>';}).join('');
+    var risks = (c.risks||[]).map(function(r){return '<li>'+r+'</li>';}).join('');
+    var srcs = (c.sources||[]).map(function(s){
+      return '<div>· <a href="'+s.url+'" target="_blank" rel="noopener">'+s.label+'</a> <span class="kv">('+s.date+')</span></div>';
+    }).join('');
+    var sim = c.similar_to ? '<div class="sim">⚠ similar to <b>'+c.similar_to+'</b></div>' : '';
+    var manual = (c.source==="manual entry") ? ' <span class="manual">manual entry</span>' : '';
+    return '<article class="card" data-signal="'+c.signal+'" data-status="'+c.status+'">'+
+      '<div class="top"><div><h3>'+c.title+'</h3><div class="id">'+c.id+manual+'</div></div>'+
+      '<div class="badges">'+badge(c.signal,SIG_COLOR[c.signal]||'#888')+
+        badge(c.status,STATUS_COLOR[c.status]||'#888')+'</div></div>'+
+      '<div class="evidence">'+ (c.signal_evidence||'') +'</div>'+
+      '<div class="mech">'+c.mechanic+'</div>'+
+      '<div class="fp">'+fps+'</div>'+ sim +
+      '<div class="scores">'+scoreRows+'</div>'+
+      '<div class="total">Total <b>'+total(c)+'</b>/20</div>'+
+      '<div class="kv"><b>CPI</b> '+(c.cpi_range||'—')+' &nbsp;·&nbsp; <b>Market</b> '+(c.target_market||'—')+'</div>'+
+      '<div class="kv"><b>Reference</b> '+ (c.reference_games||[]).join(', ') +'</div>'+
+      '<ul class="risks">'+risks+'</ul>'+
+      '<div class="sources">'+srcs+'</div>'+
+      '</article>';
+  }
+
+  function render(){
+    var cards = (data.cards||[]).slice()
+      .filter(function(c){ return state.signal==="ALL" || c.signal===state.signal; })
+      .filter(function(c){ return state.status==="ALL" || c.status===state.status; })
+      .sort(function(a,b){ return total(b)-total(a); });
+    var g = document.getElementById('grid');
+    g.innerHTML = cards.length ? cards.map(cardHTML).join('')
+      : '<div class="empty">No cards match this filter.</div>';
+  }
+  render();
+
+  // eliminated
+  var elim = data.eliminated||[];
+  document.getElementById('elimCount').textContent = elim.length;
+  document.getElementById('elimList').innerHTML = elim.length
+    ? elim.map(function(e){return '<li><b style="color:var(--muted);font-family:ui-monospace,Menlo,monospace">'+
+        e.id+'</b> — '+e.reason+'</li>';}).join('')
+    : '<li>None.</li>';
+})();
+</script>
+</body>
+</html>

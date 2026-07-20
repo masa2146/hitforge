@@ -1,0 +1,19 @@
+{
+  "name": "hitforge",
+  "displayName": "HitForge",
+  "description": "A repeatable, human-gated mobile-game concept-production pipeline: market scan → approved concept → buildable spec → ad-creative prompts, with an idea memory (mechanic fingerprints + Jaccard) that prevents the same idea from silently returning.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Fatih Bulut"
+  },
+  "license": "MIT",
+  "keywords": [
+    "mobile-games",
+    "game-design",
+    "market-research",
+    "concept-pipeline",
+    "unity",
+    "ad-creatives",
+    "product-discovery"
+  ]
+}

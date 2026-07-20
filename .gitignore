@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# Editor / logs
+*.log
+*.swp
+.idea/
+.vscode/
+
+# Runtime pipeline output generated in a *user's* project (not part of the plugin).
+# Kept out so example artifacts in examples/ stay the canonical reference.
+docs/research/
+docs/specs/
+docs/creatives/
+docs/pipeline-state.md
+docs/pipeline-dashboard.html

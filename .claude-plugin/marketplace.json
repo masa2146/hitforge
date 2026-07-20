@@ -1,0 +1,13 @@
+{
+  "name": "hitforge",
+  "owner": {
+    "name": "Fatih Bulut"
+  },
+  "plugins": [
+    {
+      "name": "hitforge",
+      "source": "./",
+      "description": "Mobile-game concept-production pipeline: market scan → approved concept → buildable Unity spec → ad-creative prompts. Human-gated, idea-memory-backed, repeatable."
+    }
+  ]
+}
