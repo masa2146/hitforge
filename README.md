@@ -44,7 +44,7 @@ HitForge is a Claude Code plugin. This repository is its own marketplace, so ins
 two commands inside Claude Code:
 
 ```
-/plugin marketplace add <your-github-user>/hitforge
+/plugin marketplace add masa2146/hitforge
 /plugin install hitforge@hitforge
 ```
 
@@ -57,7 +57,8 @@ accepts the short form `/market-scan` when the name is unambiguous.)
 > the skills won't resolve. The plugin install is the supported path.
 
 **Requirements:** Claude Code with web search enabled (for `/market-scan`). No other
-dependencies; the HTML reports are self-contained and open offline.
+dependencies; the HTML reports open offline (the report template pulls one web font from
+Google Fonts, with a system-font fallback if you're offline).
 
 ### Optional: superpowers plugin
 The [superpowers](https://github.com/anthropics) `brainstorming` skill is **optional**. If
