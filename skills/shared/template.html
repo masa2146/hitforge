@@ -156,53 +156,83 @@
     font-family:var(--mono);font-size:9.5px;font-weight:800;letter-spacing:1px;padding:4px 34px;
     text-transform:uppercase;box-shadow:0 3px 10px -3px rgba(0,0,0,.6)}
 
-  /* synthesis (fused) plates */
-  .plate.synthesis{border-color:rgba(31,214,196,.42)}
-  .plate.synthesis .plate-head{background:linear-gradient(180deg,rgba(31,214,196,.07),transparent)}
-  .parents{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-family:var(--mono);
-    font-size:10.5px;color:var(--sig-synthesis);letter-spacing:.3px}
-  .parents .p{background:rgba(31,214,196,.1);border:1px solid rgba(31,214,196,.32);
-    border-radius:4px;padding:1px 7px}
-  .evidence.syn{border-left-color:var(--sig-synthesis);
-    background:linear-gradient(90deg,rgba(31,214,196,.1),transparent);color:#c9efe9}
-  .evidence.syn .ev-tag{color:var(--sig-synthesis)}
-  .combo{font-size:12.5px;color:#d7dee7;background:var(--steel-3);border:1px solid var(--line);
-    border-radius:var(--r-sm);padding:10px 12px;line-height:1.55}
-  .combo .ev-tag{color:var(--gold)}
-  .preview{font-size:12px;color:var(--muted);font-style:italic;border:1px dashed var(--line2);
-    border-radius:var(--r-sm);padding:9px 12px;line-height:1.5}
-  .preview .ev-tag{color:var(--ember);font-style:normal}
-  /* original (ideate / divergence) plates */
-  .plate.original{border-color:rgba(255,93,177,.42)}
-  .plate.original .plate-head{background:linear-gradient(180deg,rgba(255,93,177,.07),transparent)}
-  .plate.original .parents{color:var(--sig-original)}
-  .plate.original .parents .p{background:rgba(255,93,177,.1);border-color:rgba(255,93,177,.32)}
-  .evidence.orig{border-left-color:var(--sig-original);
-    background:linear-gradient(90deg,rgba(255,93,177,.1),transparent);color:#ffd6ec}
-  .evidence.orig .ev-tag{color:var(--sig-original)}
-  .op{align-self:flex-start;display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);
-    font-size:9.5px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--sig-original);
-    border:1px solid rgba(255,93,177,.4);background:rgba(255,93,177,.1);border-radius:5px;padding:2px 9px}
-  .leap{font-size:12.5px;color:#ffe3f2;background:linear-gradient(90deg,rgba(255,93,177,.1),transparent);
-    border-left:3px solid var(--sig-original);padding:9px 12px;border-radius:0 var(--r-sm) var(--r-sm) 0;line-height:1.5}
-  .leap .ev-tag{color:var(--sig-original)}
-  .simcheck{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.2px}
-  .simcheck b{color:var(--gold);font-weight:600}
-  .honest{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-  .honest .h{border:1px solid var(--line);border-radius:var(--r-sm);padding:9px 11px;font-size:11.5px;line-height:1.5}
-  .honest .hit{background:rgba(47,208,122,.06);border-color:rgba(47,208,122,.28);color:#c9f0d8}
-  .honest .miss{background:rgba(255,84,112,.06);border-color:rgba(255,84,112,.28);color:#ffc9d2}
-  .honest .h .t{display:block;font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+  /* synthesis / original plates — accent lives on the border + head tint + the ONE signal callout, nowhere else */
+  .plate.synthesis{border-color:rgba(31,214,196,.4)}
+  .plate.synthesis .plate-head{background:linear-gradient(180deg,rgba(31,214,196,.06),transparent)}
+  .plate.original{border-color:rgba(255,93,177,.4)}
+  .plate.original .plate-head{background:linear-gradient(180deg,rgba(255,93,177,.06),transparent)}
+
+  /* provenance line (parents + operator) — compact meta strip at top of body */
+  .metaline{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.3px;color:var(--muted)}
+  .metaline .lead{color:var(--faint);text-transform:uppercase;letter-spacing:.8px}
+  .metaline .p{background:var(--steel-3);border:1px solid var(--line);border-radius:4px;padding:1px 7px}
+  .metaline .op{color:var(--sig-original);border:1px solid rgba(255,93,177,.4);background:rgba(255,93,177,.1);
+    border-radius:4px;padding:1px 7px;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+  .plate.synthesis .metaline{color:var(--sig-synthesis)}
+  .plate.synthesis .metaline .lead{color:var(--sig-synthesis);opacity:.75}
+  .plate.synthesis .metaline .p{background:rgba(31,214,196,.1);border-color:rgba(31,214,196,.3)}
+  .plate.original .metaline{color:var(--sig-original)}
+  .plate.original .metaline .lead{color:var(--sig-original);opacity:.75}
+  .plate.original .metaline .p{background:rgba(255,93,177,.1);border-color:rgba(255,93,177,.3)}
+
+  /* THE single emphasized callout — "why now" */
+  .signal-box{border-radius:0 var(--r-sm) var(--r-sm) 0;padding:11px 14px;font-size:12.5px;line-height:1.62;
+    background:linear-gradient(90deg,var(--ember-glow),transparent);border-left:3px solid var(--ember);color:#ffe2cd}
+  .signal-box .st{display:block;font-family:var(--mono);font-size:9px;font-weight:800;letter-spacing:1.6px;
+    text-transform:uppercase;color:var(--ember);margin-bottom:6px}
+  .signal-box.syn{border-left-color:var(--sig-synthesis);
+    background:linear-gradient(90deg,rgba(31,214,196,.11),transparent);color:#cdefe9}
+  .signal-box.syn .st{color:var(--sig-synthesis)}
+  .signal-box.orig{border-left-color:var(--sig-original);
+    background:linear-gradient(90deg,rgba(255,93,177,.11),transparent);color:#ffd9ee}
+  .signal-box.orig .st{color:var(--sig-original)}
+
+  /* hairline zone separator */
+  .hair{height:0;border:0;border-top:1px solid var(--line);margin:16px 0}
+  /* pin the score block to the card bottom so rows align, divider stays attached */
+  .score-wrap{margin-top:auto}
+
+  /* generic labeled section: quiet mono label, then readable body text. No box, no tint. */
+  .sec + .sec{margin-top:15px}
+  .sec-l{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:9px;font-weight:700;
+    letter-spacing:1.5px;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+  .sec-l::before{content:"";width:5px;height:5px;border-radius:1px;background:var(--ember);opacity:.55;flex-shrink:0}
+  .sec-b{font-size:13px;line-height:1.64;color:#c6d2df}
+  .sec-b strong{color:var(--text);font-weight:600}
+  .sec.lead-sec .sec-b{font-size:13.5px;color:#dde6ef}   /* mechanic = the most prominent body text */
+
+  /* fingerprint chips */
+  .fp{display:flex;gap:6px;flex-wrap:wrap}
+  .fp span{background:var(--steel-3);border:1px solid var(--line);font-size:10.5px;padding:2px 9px;
+    border-radius:4px;color:var(--muted);font-family:var(--mono);letter-spacing:.3px}
+  .fp span::before{content:"#";color:var(--faint);margin-right:1px}
+
+  /* small muted notes (similarity checks) — sit under the concept group, never boxed */
+  .note{display:flex;gap:7px;align-items:flex-start;font-family:var(--mono);font-size:10.5px;
+    line-height:1.55;color:var(--muted);letter-spacing:.15px;margin-top:12px}
+  .note .ic{color:var(--gold);flex-shrink:0;font-family:var(--sans)}
+  .note strong{color:var(--gold);font-weight:600}
+
+  /* honest read — the only place besides the signal callout that earns color */
+  .honest{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .honest .h{border:1px solid var(--line);border-radius:var(--r-sm);padding:10px 11px;font-size:11.5px;line-height:1.52}
+  .honest .hit{background:rgba(47,208,122,.06);border-color:rgba(47,208,122,.26);color:#cbf0da}
+  .honest .miss{background:rgba(255,84,112,.06);border-color:rgba(255,84,112,.26);color:#ffccd4}
+  .honest .h .t{display:block;font-family:var(--mono);font-size:8.5px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
   .honest .hit .t{color:var(--sig-rising)} .honest .miss .t{color:var(--st-rejected)}
-  /* image thumbnails (optional) */
+
+  /* preview thumbnails */
   .thumbs{display:flex;gap:8px;flex-wrap:wrap}
   .thumbs a{display:block;width:76px;height:76px;border:1px solid var(--line);
     border-radius:var(--r-sm);overflow:hidden;background:var(--steel-3)}
   .thumbs a:hover{border-color:var(--ember)}
   .thumbs img{width:100%;height:100%;object-fit:cover;display:block}
-  /* reference games: store link + slide screenshots */
-  .refblock{display:flex;flex-direction:column;gap:9px;border-bottom:1px solid rgba(255,255,255,.04);padding-bottom:9px}
-  .rlabel{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--faint)}
+
+  /* reference games (in facts footer) */
+  .factsec{display:flex;flex-direction:column;gap:8px}
+  .refblock{display:flex;flex-direction:column;gap:9px}
+  .rlabel{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--faint)}
   .refs{display:flex;flex-direction:column;gap:11px}
   .ref{display:flex;flex-direction:column;gap:6px}
   .rname{font-size:12.5px;color:var(--text);font-weight:600;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
@@ -226,26 +256,16 @@
   .copy:hover{color:var(--ember);border-color:var(--ember)}
   .copy.done{color:var(--sig-rising);border-color:var(--sig-rising)}
   .tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0}
+  .plate.top .tags{margin-right:34px}   /* clear the Top-pick ribbon */
   .badge{font-family:var(--mono);font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:5px;
     text-transform:uppercase;letter-spacing:.6px;white-space:nowrap}
   .manual{font-family:var(--mono);font-size:9px;color:var(--sig-revisit);border:1px dashed var(--sig-revisit);
     padding:1px 6px;border-radius:4px;letter-spacing:.4px;text-transform:uppercase}
 
-  .plate-body{padding:15px 17px;display:flex;flex-direction:column;gap:14px;flex:1;position:relative;z-index:1}
-  .evidence{font-size:12.5px;color:#ffe0c9;background:linear-gradient(90deg,var(--ember-glow),transparent);
-    border-left:3px solid var(--ember);padding:9px 12px;border-radius:0 var(--r-sm) var(--r-sm) 0;line-height:1.5}
-  .ev-tag{display:inline-block;font-family:var(--mono);font-size:8.5px;font-weight:800;letter-spacing:1.4px;
-    color:var(--ember);text-transform:uppercase;margin-right:7px;vertical-align:1px}
-  .mech{margin:0;font-size:13.5px;color:#cdd8e4;line-height:1.55}
-  .fp{display:flex;gap:6px;flex-wrap:wrap}
-  .fp span{background:var(--steel-3);border:1px solid var(--line);font-size:10.5px;padding:2px 9px;
-    border-radius:4px;color:var(--muted);font-family:var(--mono);letter-spacing:.3px}
-  .fp span::before{content:"#";color:var(--faint);margin-right:1px}
-  .sim{font-family:var(--mono);font-size:11px;color:var(--gold);background:rgba(244,183,64,.08);
-    border:1px solid rgba(244,183,64,.28);padding:7px 11px;border-radius:var(--r-sm);letter-spacing:.2px}
+  .plate-body{padding:17px 18px 18px;display:flex;flex-direction:column;flex:1;position:relative;z-index:1}
 
   /* heat scores */
-  .scores{background:var(--steel-3);border:1px solid var(--line);border-radius:var(--r-md);padding:14px;margin-top:auto}
+  .scores{background:var(--steel-3);border:1px solid var(--line);border-radius:var(--r-md);padding:14px}
   .sc-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:11px}
   .sc-t{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1.6px;color:var(--faint)}
   .sc-v{font-family:var(--mono);font-size:14px;color:var(--muted)}
@@ -560,23 +580,62 @@
     var srcs=(c.sources||[]).map(function(s){
       var d=domain(s.url); return '<div class="s"><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.label)+
         '</a> '+(d?'<span class="d">'+d+'</span> ':'')+'<span class="d">('+esc(s.date)+')</span></div>'; }).join('');
-    var sim=c.similar_to?'<div class="sim">⚠ similar to <b>'+esc(c.similar_to)+'</b> — check it is genuinely distinct</div>':'';
     var manual=(c.source==='manual entry')?' <span class="manual">manual</span>':'';
     var isSyn=c.signal==='SYNTHESIS', isOrig=c.signal==='ORIGINAL';
-    var pLabel = isSyn ? '⚒ forged from' : (isOrig ? '◈ raw material' : '↳ from');
-    var parents=(c.parents&&c.parents.length)
-      ? '<div class="parents">'+pLabel+' '+c.parents.map(function(p){return '<span class="p">'+esc(p)+'</span>';}).join(' + ')+'</div>' : '';
-    var combo=c.why_combination?'<div class="combo"><span class="ev-tag">Why combine</span>'+esc(c.why_combination)+'</div>':'';
-    var preview=c.visual_preview?'<div class="preview"><span class="ev-tag">Visual preview</span>'+esc(c.visual_preview)+'</div>':'';
-    var op=c.operator?'<span class="op">◆ '+esc(c.operator)+'</span>':'';
-    var leap=c.leap?'<div class="leap"><span class="ev-tag">Leap from parent</span>'+esc(c.leap)+'</div>':'';
-    var simcheck=c.similarity_check?'<div class="simcheck">Anyone doing this? <b>'+esc(c.similarity_check)+'</b></div>':'';
-    var testhyp=c.test_hypothesis?'<div class="preview"><span class="ev-tag">3-sec ad test</span>'+esc(c.test_hypothesis)+'</div>':'';
-    var honest=(c.why_might_hit||c.why_might_not)
-      ? '<div class="honest"><div class="h hit"><span class="t">Why it might hit</span>'+esc(c.why_might_hit||'—')+'</div>'+
-        '<div class="h miss"><span class="t">Why it might not</span>'+esc(c.why_might_not||'—')+'</div></div>' : '';
-    var thumbs=(c.images&&c.images.length)
-      ? '<div class="thumbs">'+c.images.map(function(im){return '<a href="'+esc(im.src)+'" target="_blank" rel="noopener" title="'+esc(im.caption||'')+'"><img src="'+esc(im.src)+'" alt="'+esc(im.caption||'')+'" loading="lazy"></a>';}).join('')+'</div>' : '';
+
+    // labeled section: quiet mono label + readable body — the repeatable readability unit
+    function sec(label, inner, cls){
+      return '<div class="sec'+(cls?' '+cls:'')+'"><div class="sec-l">'+label+'</div><div class="sec-b">'+inner+'</div></div>';
+    }
+
+    // ---- ZONE 0: provenance meta strip (only for forged/original cards) ----
+    var metaline='';
+    if((c.parents&&c.parents.length) || c.operator){
+      var lead = isSyn ? 'Forged from' : (isOrig ? 'Raw material' : 'From');
+      var pchips = (c.parents||[]).map(function(p){return '<span class="p">'+esc(p)+'</span>';}).join(' + ');
+      metaline = '<div class="metaline">'+
+        ((c.parents&&c.parents.length)?'<span class="lead">'+lead+'</span>'+pchips:'')+
+        (c.operator?'<span class="op">◆ '+esc(c.operator)+'</span>':'')+'</div>';
+    }
+
+    // ---- ZONE 1: the one emphasized callout — why this is worth looking at now ----
+    var sigCls = isSyn?'syn':(isOrig?'orig':'');
+    var sigSt  = isSyn?'Inherited signal' : (isOrig?'Unvalidated · original' : 'Signal — why now');
+    var signalBox = '<div class="signal-box '+sigCls+'"><span class="st">'+sigSt+'</span>'+esc(c.signal_evidence||'')+'</div>';
+
+    // ---- ZONE 2: the concept — every block is a plain labeled section ----
+    var concept = sec('Mechanic', esc(c.mechanic||'—'), 'lead-sec');
+    if(c.why_combination) concept += sec('Why this combination', esc(c.why_combination));
+    if(c.leap)            concept += sec('Leap from parent', esc(c.leap));
+    if(fps)               concept += sec('Mechanic fingerprint', '<div class="fp">'+fps+'</div>');
+    if(c.visual_preview)  concept += sec('Visual preview', esc(c.visual_preview));
+    if(c.test_hypothesis) concept += sec('3-second ad test', esc(c.test_hypothesis));
+    if(c.similar_to)      concept += '<div class="note"><span class="ic">⚠</span><span>Similar to <strong>'+esc(c.similar_to)+'</strong> — confirm it is genuinely distinct.</span></div>';
+    if(c.similarity_check)concept += '<div class="note"><span class="ic">◇</span><span>Anyone shipping this? <strong>'+esc(c.similarity_check)+'</strong></span></div>';
+
+    // ---- ZONE 3: the honest read + concept preview (color earns its place here) ----
+    var readGroup='';
+    if(c.why_might_hit||c.why_might_not){
+      readGroup += sec('Honest read',
+        '<div class="honest"><div class="h hit"><span class="t">Why it might hit</span>'+esc(c.why_might_hit||'—')+'</div>'+
+        '<div class="h miss"><span class="t">Why it might not</span>'+esc(c.why_might_not||'—')+'</div></div>');
+    }
+    if(c.images&&c.images.length){
+      readGroup += sec('Concept preview', '<div class="thumbs">'+c.images.map(function(im){
+        return '<a href="'+esc(im.src)+'" target="_blank" rel="noopener" title="'+esc(im.caption||'')+'"><img src="'+esc(im.src)+'" alt="'+esc(im.caption||'')+'" loading="lazy"></a>';
+      }).join('')+'</div>');
+    }
+
+    // ---- ZONE 4: scores ----
+    var scoresBlock = '<div class="scores"><div class="sc-head"><span class="sc-t">Heat score</span>'+
+      '<span class="sc-v"><b>'+total(c)+'</b>/20</span></div>'+scoreRows+'</div>';
+
+    var bodyHTML = metaline + signalBox +
+      '<hr class="hair">' + concept +
+      (readGroup ? '<hr class="hair">'+readGroup : '') +
+      '<div class="score-wrap"><hr class="hair">' + scoresBlock + '</div>';
+
+    // ---- facts footer (labeled) ----
     var refs=refList(c);
     var refsHTML = refs.length
       ? '<div class="refblock"><span class="rlabel">Reference games</span><div class="refs">'+
@@ -590,6 +649,13 @@
           return '<div class="ref">'+head+slides+'</div>';
         }).join('')+'</div></div>'
       : '';
+    var factsHTML =
+      '<div class="kv"><span>CPI</span><b>'+esc(c.cpi_range||'—')+'</b></div>'+
+      '<div class="kv"><span>Target market</span><b>'+esc(c.target_market||'—')+'</b></div>'+
+      refsHTML+
+      (risks?'<div class="factsec"><span class="rlabel">Risks</span><ul class="risks">'+risks+'</ul></div>':'')+
+      (srcs?'<div class="factsec"><span class="rlabel">Sources</span><div class="sources">'+srcs+'</div></div>':'');
+
     return '<article class="plate'+(isTop?' top':'')+(isSyn?' synthesis':'')+(isOrig?' original':'')+'" style="--i:'+i+'" data-signal="'+esc(c.signal)+'" data-status="'+esc(c.status)+'">'+
       (isTop?'<div class="ribbon">Top pick</div>':'')+
       '<div class="plate-head"><div class="ph-row">'+
@@ -597,29 +663,8 @@
         '<div class="tags">'+badge(c.signal,SIG[c.signal]||'#888')+badge(c.status,STA[c.status]||'#888')+'</div>'+
       '</div><div class="idrow"><span class="pid">'+esc(c.id)+'</span>'+manual+
         '<button class="copy" data-id="'+esc(c.id)+'">⧉ /spec</button></div></div>'+
-      '<div class="plate-body">'+
-        '<div class="evidence'+(isSyn?' syn':(isOrig?' orig':''))+'"><span class="ev-tag">'+(isSyn?'Inherited':(isOrig?'Unvalidated':'Signal'))+'</span>'+esc(c.signal_evidence||'')+'</div>'+
-        op+
-        parents+
-        leap+
-        '<p class="mech">'+esc(c.mechanic||'')+'</p>'+
-        combo+
-        '<div class="fp">'+fps+'</div>'+sim+
-        simcheck+
-        preview+
-        testhyp+
-        honest+
-        thumbs+
-        '<div class="scores"><div class="sc-head"><span class="sc-t">Heat score</span>'+
-          '<span class="sc-v"><b>'+total(c)+'</b>/20</span></div>'+scoreRows+'</div>'+
-      '</div>'+
-      '<div class="facts">'+
-        '<div class="kv"><span>CPI</span><b>'+esc(c.cpi_range||'—')+'</b></div>'+
-        '<div class="kv"><span>Target market</span><b>'+esc(c.target_market||'—')+'</b></div>'+
-        refsHTML+
-        (risks?'<ul class="risks">'+risks+'</ul>':'')+
-        (srcs?'<div class="sources">'+srcs+'</div>':'')+
-      '</div></article>';
+      '<div class="plate-body">'+ bodyHTML +'</div>'+
+      '<div class="facts">'+ factsHTML +'</div></article>';
   }
 
   function render(){
