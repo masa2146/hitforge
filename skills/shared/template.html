@@ -177,6 +177,21 @@
     border-radius:var(--r-sm);overflow:hidden;background:var(--steel-3)}
   .thumbs a:hover{border-color:var(--ember)}
   .thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+  /* reference games: store link + slide screenshots */
+  .refblock{display:flex;flex-direction:column;gap:9px;border-bottom:1px solid rgba(255,255,255,.04);padding-bottom:9px}
+  .rlabel{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--faint)}
+  .refs{display:flex;flex-direction:column;gap:11px}
+  .ref{display:flex;flex-direction:column;gap:6px}
+  .rname{font-size:12.5px;color:var(--text);font-weight:600;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .rname a{color:var(--text)}
+  .rname a:hover{color:var(--ember)}
+  .store{font-family:var(--mono);font-size:8.5px;text-transform:uppercase;letter-spacing:.7px;
+    color:var(--sig-rising);border:1px solid rgba(47,208,122,.4);border-radius:4px;padding:1px 6px}
+  .rslides{display:flex;gap:7px;flex-wrap:wrap}
+  .rslides a{width:52px;height:90px;border:1px solid var(--line);border-radius:5px;overflow:hidden;
+    background:var(--steel-3);flex-shrink:0}
+  .rslides a:hover{border-color:var(--ember)}
+  .rslides img{width:100%;height:100%;object-fit:cover;display:block}
 
   .plate-head{padding:17px 17px 13px;border-bottom:1px solid var(--line);position:relative;z-index:1}
   .ph-row{display:flex;justify-content:space-between;gap:11px;align-items:flex-start}
@@ -334,7 +349,15 @@
       "signal_evidence": "Climbing US puzzle charts steadily over the last 4 months (sample data).",
       "mechanic": "Items ride a conveyor belt toward color bins. You shoot each item so it lands in the matching bin before the belt overflows.",
       "fingerprint": ["conveyor","shoot","sort"],
-      "reference_games": ["Sample Sorter", "Belt Blaster"],
+      "reference_games": [
+        { "name": "Sample Sorter", "url": "https://play.google.com/store/search?q=Sample%20Sorter&c=apps",
+          "images": [
+            { "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='210'%3E%3Crect width='120' height='210' fill='%230f1826'/%3E%3Crect width='120' height='26' fill='%23ff6a2b'/%3E%3Ctext x='60' y='18' fill='%23fff' font-family='monospace' font-size='10' text-anchor='middle'%3ELEVEL 4%3C/text%3E%3Ccircle cx='30' cy='108' r='9' fill='%23ff9f1c'/%3E%3Ccircle cx='60' cy='108' r='9' fill='%232fd07a'/%3E%3Ccircle cx='90' cy='108' r='9' fill='%233d8bff'/%3E%3Crect x='12' y='150' width='96' height='7' rx='3' fill='%231fd6c4'/%3E%3Ctext x='60' y='190' fill='%2394a2b2' font-family='monospace' font-size='8' text-anchor='middle'%3Egameplay%3C/text%3E%3C/svg%3E", "caption": "Store slide 1 — gameplay (illustrative placeholder, not the real listing)" },
+            { "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='210'%3E%3Crect width='120' height='210' fill='%230f1826'/%3E%3Crect width='120' height='26' fill='%23ff3d3d'/%3E%3Ctext x='60' y='18' fill='%23fff' font-family='monospace' font-size='10' text-anchor='middle'%3ECOMBO x8%3C/text%3E%3Crect x='24' y='92' width='72' height='42' rx='6' fill='%23f4b740'/%3E%3Ctext x='60' y='119' fill='%231a0a03' font-family='monospace' font-size='13' text-anchor='middle'%3E512%3C/text%3E%3Ctext x='60' y='190' fill='%2394a2b2' font-family='monospace' font-size='8' text-anchor='middle'%3Enear-miss%3C/text%3E%3C/svg%3E", "caption": "Store slide 2 — near-miss (illustrative placeholder)" },
+            { "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='210'%3E%3Crect width='120' height='210' fill='%230f1826'/%3E%3Crect width='120' height='26' fill='%232fd07a'/%3E%3Ctext x='60' y='18' fill='%23052915' font-family='monospace' font-size='10' text-anchor='middle'%3ESTAGE CLEAR%3C/text%3E%3Ctext x='60' y='128' fill='%23f4b740' font-family='monospace' font-size='36' text-anchor='middle'%3E%E2%98%85%3C/text%3E%3Ctext x='60' y='190' fill='%2394a2b2' font-family='monospace' font-size='8' text-anchor='middle'%3Ewin%3C/text%3E%3C/svg%3E", "caption": "Store slide 3 — win (illustrative placeholder)" }
+          ] },
+        { "name": "Belt Blaster", "url": "https://play.google.com/store/search?q=Belt%20Blaster&c=apps" }
+      ],
       "scores": { "video_clarity": 5, "production_ease": 4, "competition_gap": 3, "meta_potential": 3 },
       "cpi_range": "$0.30–0.55",
       "target_market": "US / Tier-1",
@@ -354,7 +377,10 @@
       "signal_evidence": "Two creatives crossed 3M TikTok views in the last 3 weeks (sample data).",
       "mechanic": "You run forward pulling a magnet; matching-color people snap to your crowd while wrong colors bounce off. Reach the gate with the biggest crowd.",
       "fingerprint": ["run","crowd","pull","magnet"],
-      "reference_games": ["Crowd Rush", "Magnet Dash"],
+      "reference_games": [
+        { "name": "Crowd Rush", "url": "https://play.google.com/store/search?q=Crowd%20Rush&c=apps" },
+        { "name": "Magnet Dash", "url": "https://play.google.com/store/search?q=Magnet%20Dash&c=apps" }
+      ],
       "scores": { "video_clarity": 5, "production_ease": 3, "competition_gap": 4, "meta_potential": 4 },
       "cpi_range": "$0.25–0.45",
       "target_market": "US + BR / broad",
@@ -374,7 +400,10 @@
       "signal_evidence": "Merge-tycoon hybrids have held top-grossing puzzle slots for 14+ months (sample data).",
       "mechanic": "Merge numbered tiles to earn cash, then reinvest cash to unlock faster generators. Idle income accrues while away.",
       "fingerprint": ["merge","number","idle","tycoon"],
-      "reference_games": ["Merge Empire", "Tile Tycoon"],
+      "reference_games": [
+        { "name": "Merge Empire", "url": "https://play.google.com/store/search?q=Merge%20Empire&c=apps" },
+        { "name": "Tile Tycoon", "url": "https://play.google.com/store/search?q=Tile%20Tycoon&c=apps" }
+      ],
       "scores": { "video_clarity": 3, "production_ease": 4, "competition_gap": 2, "meta_potential": 5 },
       "cpi_range": "$0.50–0.90",
       "target_market": "US / Tier-1 payers",
@@ -440,6 +469,10 @@
   function total(c){ var s=c.scores||{}; return (s.video_clarity||0)+(s.production_ease||0)+(s.competition_gap||0)+(s.meta_potential||0); }
   function badge(t,color){ return '<span class="badge" style="background:'+color+'1f;color:'+color+';border:1px solid '+color+'66">'+esc(t)+'</span>'; }
   function domain(u){ try{ return new URL(u).hostname.replace(/^www\./,''); }catch(e){ return ''; } }
+  function storeName(u){ u=(u||'').toLowerCase();
+    return u.indexOf('play.google')>=0?'Play':(u.indexOf('apps.apple')>=0||u.indexOf('itunes.apple')>=0)?'App Store':'Store'; }
+  // reference_games accepts either "Name" (string) or {name,url?,images?} (object)
+  function refList(c){ return (c.reference_games||[]).map(function(r){ return (typeof r==='string')?{name:r}:(r||{}); }); }
 
   var cards = data.cards||[];
   // Top pick = highest heat among EVIDENCE-BACKED cards; a market-unvalidated
@@ -509,6 +542,19 @@
     var preview=c.visual_preview?'<div class="preview"><span class="ev-tag">Visual preview</span>'+esc(c.visual_preview)+'</div>':'';
     var thumbs=(c.images&&c.images.length)
       ? '<div class="thumbs">'+c.images.map(function(im){return '<a href="'+esc(im.src)+'" target="_blank" rel="noopener" title="'+esc(im.caption||'')+'"><img src="'+esc(im.src)+'" alt="'+esc(im.caption||'')+'" loading="lazy"></a>';}).join('')+'</div>' : '';
+    var refs=refList(c);
+    var refsHTML = refs.length
+      ? '<div class="refblock"><span class="rlabel">Reference games</span><div class="refs">'+
+        refs.map(function(r){
+          var head = r.url
+            ? '<div class="rname"><a href="'+esc(r.url)+'" target="_blank" rel="noopener">'+esc(r.name||'—')+'</a><span class="store">'+storeName(r.url)+' ↗</span></div>'
+            : '<div class="rname">'+esc(r.name||'—')+'</div>';
+          var slides = (r.images&&r.images.length)
+            ? '<div class="rslides">'+r.images.map(function(im){return '<a href="'+esc(im.src)+'" target="_blank" rel="noopener" title="'+esc(im.caption||'')+'"><img src="'+esc(im.src)+'" alt="'+esc(im.caption||'')+'" loading="lazy"></a>';}).join('')+'</div>'
+            : '';
+          return '<div class="ref">'+head+slides+'</div>';
+        }).join('')+'</div></div>'
+      : '';
     return '<article class="plate'+(isTop?' top':'')+(isSyn?' synthesis':'')+'" style="--i:'+i+'" data-signal="'+esc(c.signal)+'" data-status="'+esc(c.status)+'">'+
       (isTop?'<div class="ribbon">Top pick</div>':'')+
       '<div class="plate-head"><div class="ph-row">'+
@@ -530,7 +576,7 @@
       '<div class="facts">'+
         '<div class="kv"><span>CPI</span><b>'+esc(c.cpi_range||'—')+'</b></div>'+
         '<div class="kv"><span>Target market</span><b>'+esc(c.target_market||'—')+'</b></div>'+
-        '<div class="kv"><span>Reference</span><b>'+esc((c.reference_games||[]).join(', ')||'—')+'</b></div>'+
+        refsHTML+
         (risks?'<ul class="risks">'+risks+'</ul>':'')+
         (srcs?'<div class="sources">'+srcs+'</div>':'')+
       '</div></article>';

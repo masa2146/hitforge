@@ -146,7 +146,11 @@ does not regenerate the HTML/CSS/JS. The dashboard (`docs/pipeline-dashboard.htm
       "signal_evidence": "dated one-liner justifying the tag",
       "mechanic": "2-sentence mechanic summary",
       "fingerprint": ["kw1","kw2","kw3"],
-      "reference_games": ["Game A", "Game B"],
+      "reference_games": [
+        { "name": "Game A",
+          "url": "https://play.google.com/store/apps/details?id=...",
+          "images": [ { "src": "path-or-url", "caption": "store slide" } ] }
+      ],
       "scores": { "video_clarity": 5, "production_ease": 4,
                   "competition_gap": 3, "meta_potential": 3 },
       "cpi_range": "$0.30–0.60",
@@ -170,8 +174,18 @@ does not regenerate the HTML/CSS/JS. The dashboard (`docs/pipeline-dashboard.htm
 **Optional fields:** `parents`, `why_combination`, `visual_preview` appear **only on
 `SYNTHESIS` cards** (see §6). `images` is optional on any card — a strip of thumbnails
 (`src` = local path or URL, click opens in a new tab). If `images` is absent or empty the
-template renders nothing. `src` is **never auto-downloaded** by the skill (copyright; the
-repo may be public) — it is user-added or produced during the creative-prompts stage.
+template renders nothing.
+
+**`reference_games`** may be a bare `"Name"` string **or** an object
+`{ name, url?, images? }`. `url` is the store listing (Google Play / App Store); the skill
+**should add it** during research — it is just a link. `images` is an optional strip of
+store slides shown under the game name.
+
+**Copyright rule (applies to every `src`, card-level and reference-game):** the skill
+**never auto-downloads or bundles store screenshots** (copyright; the repo may be public).
+It emits store **links** only. Any image `src` is user-added or produced during the
+creative-prompts stage. In examples, use clearly-labelled illustrative placeholders, not
+real store assets.
 
 ### Signal badge colors (consistent everywhere)
 - `RISING` → green

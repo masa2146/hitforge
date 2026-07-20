@@ -126,10 +126,15 @@ a one-paragraph `why_combination`, a `visual_preview`, and the fixed note
 **never the "top pick"**, and if no sensible combination exists the step produces **zero**
 synthesis cards.
 
-Any card may also carry an optional **`images`** array (`{src, caption}`) that renders as a
-thumbnail strip (click opens in a new tab). **HitForge never auto-downloads reference-game
-store screenshots** — copyright, and your repo may be public; the store link is enough. The
-`images` field is for screenshots you add yourself, or visuals produced during `/creatives`.
+Each **reference game** carries its **Google Play / App Store link** (the scan adds it) and
+an optional strip of **store slides** shown under the game name. Any card may also carry an
+optional card-level **`images`** array (`{src, caption}`) that renders as a thumbnail strip.
+Both open in a new tab on click.
+
+**HitForge never auto-downloads or bundles store screenshots** — copyright, and your repo
+may be public; the store *link* is enough. Every image `src` is something you add yourself
+or a visual produced during `/creatives`. The bundled examples use clearly-labelled
+illustrative placeholders, not real store assets.
 
 ---
 

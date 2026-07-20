@@ -83,7 +83,9 @@ Card fields (write into `docs/research/YYYY-MM-DD-concepts.md`):
 - `status: pending` (the user manually sets approved/rejected)
 - signal tag + its dated evidence
 - mechanic summary (2 sentences) + `mechanic_fingerprint`
-- reference games + chart evidence (with source link)
+- reference games — each as `{name, url}` with its **Google Play / App Store link** (add
+  it during research; it is just a link) + chart evidence (with source link). Store slides
+  may be attached later but are **never auto-downloaded** (copyright; see conventions §5)
 - scores (1–5), **each with a one-line justification**: `video_clarity` /
   `production_ease` / `competition_gap` / `meta_potential`
 - estimated CPI range + target market
