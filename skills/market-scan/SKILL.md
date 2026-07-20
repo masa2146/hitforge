@@ -131,8 +131,15 @@ rules in `${CLAUDE_PLUGIN_ROOT}/skills/shared/conventions.md` §6. In short:
    `docs/research/template.html`, and only if that is also missing rebuild the shell from
    the pattern in conventions §5.
 4. Update `docs/pipeline-state.md` (add the scan + its pending concepts).
-5. Tell the user the exact file paths and remind them: **approve/reject by editing the
-   `status:` field in the markdown**, then run `/spec <id>` on an approved concept.
+5. Tell the user the exact file paths and print the **Next step** block below.
+
+## Next step (handoff — conventions §8)
+
+End the output with:
+> **Next step:** review the cards and set `status` in the markdown.
+> → To diverge into original ideas: `/ideate latest`
+> → To approve a card and go deep: `/spec <id>`
+> (Both are legitimate — ideate is an optional middle layer, not required.)
 
 ## Manual mode (`--manual`, only on explicit request)
 

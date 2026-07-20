@@ -53,4 +53,9 @@ Each prompt = `style-core` + a scene-specific description. Cover:
 ## After writing
 
 Update the concept's row in `docs/research/idea-history.jsonl` (stage is now "creatives")
-and update `docs/pipeline-state.md`. Tell the user the folder path.
+and update `docs/pipeline-state.md`. Tell the user the folder path, then print the Next step.
+
+## Next step (handoff — conventions §8)
+
+> **Next step:** produce the images (`image-prompts.md`), cut the video (`video-plan.md`),
+> and run the fake-ad test. When you have the result, update state with `/pipeline-status`.

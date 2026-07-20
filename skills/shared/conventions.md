@@ -36,11 +36,11 @@ Each line has exactly these fields:
 | `date` | string | `YYYY-MM-DD`, the scan date this concept was produced. |
 | `mechanic_fingerprint` | string[] | 3–6 normalized keywords (see §3). |
 | `status` | string | one of `pending` / `approved` / `rejected` / `revisit` (see §4). |
-| `scores` | object | `{ "video_clarity": n, "production_ease": n, "competition_gap": n, "meta_potential": n }`, each 1–5. |
+| `scores` | object | `{ "video_clarity": n, "production_ease": n, "competition_gap": n, "meta_potential": n }`, each 1–5. **`ORIGINAL` cards (§7) use `novelty_risk` in place of `competition_gap`.** |
 | `summary` | string | one-line human summary of the concept (in session language is fine). |
-| `signal` | string | signal tag: `NEW-HOT` / `RISING` / `EVERGREEN` / `REVISIT` / `SYNTHESIS` (see §6). |
+| `signal` | string | signal tag: `NEW-HOT` / `RISING` / `EVERGREEN` / `REVISIT` / `SYNTHESIS` (§6) / `ORIGINAL` (§7). |
 | `source` | string | `"auto"` (default) or `"manual entry"` for `--manual` scans. |
-| `parents` | string[]? | present only when `signal` is `SYNTHESIS`; the parent card ids this concept was fused from (see §6). |
+| `parents` | string[]? | the parent card id(s) this concept came from — required for `SYNTHESIS` (fused-from, §6) and `ORIGINAL` (raw-material, §7). |
 | `reject_reason` | string? | present only when `status` is `rejected` or `revisit`; why it was rejected. |
 | `revisit_reason` | string? | present only when `status` is `revisit`; what concrete new signal changed. |
 
@@ -172,9 +172,11 @@ does not regenerate the HTML/CSS/JS. The dashboard (`docs/pipeline-dashboard.htm
 ```
 
 **Optional fields:** `parents`, `why_combination`, `visual_preview` appear **only on
-`SYNTHESIS` cards** (see §6). `images` is optional on any card — a strip of thumbnails
-(`src` = local path or URL, click opens in a new tab). If `images` is absent or empty the
-template renders nothing.
+`SYNTHESIS` cards** (see §6). `operator`, `leap`, `similarity_check`, `test_hypothesis`,
+`why_might_hit`, `why_might_not` appear **only on `ORIGINAL` cards** (see §7), whose `scores`
+carry `novelty_risk` instead of `competition_gap`. `images` is optional on any card — a
+strip of thumbnails (`src` = local path or URL, click opens in a new tab). If `images` is
+absent or empty the template renders nothing.
 
 **`reference_games`** may be a bare `"Name"` string **or** an object
 `{ name, url?, images? }`. `url` is the store listing (Google Play / App Store); the skill
@@ -193,6 +195,7 @@ real store assets.
 - `EVERGREEN` → blue
 - `REVISIT` → purple
 - `SYNTHESIS` → turquoise
+- `ORIGINAL` → magenta
 
 ### Dashboard JSON block schema (`pipeline-dashboard.html`)
 ```json
@@ -202,13 +205,15 @@ real store assets.
     { "id": "kebab-id", "title": "Human title", "status": "pending|approved|rejected|revisit",
       "stage": "scanned|approved|spec|creatives",
       "has_spec": false, "has_creatives": false,
-      "signal": "RISING", "date": "YYYY-MM-DD" }
+      "signal": "RISING", "date": "YYYY-MM-DD",
+      "next": "approve|/spec|/creatives|fake-ad test" }
   ],
   "pending_approvals": ["kebab-id", "..."]
 }
 ```
 The `stage` field is the furthest pipeline step reached:
 `scanned` → `approved` → `spec` (spec.md exists) → `creatives` (creatives written).
+The `next` field is the single suggested next action for that concept (see §8).
 
 ---
 
@@ -235,3 +240,83 @@ layer* (meta, theme, or a second mechanic) from another. It is produced in marke
   expect a `0.3–0.5` "similar" flag; `≥0.5` against a *non-parent* still blocks it).
 - **No filler.** Synthesis count is never padded — if no sensible combination exists,
   **zero synthesis cards is correct**, and the report says so.
+
+---
+
+## 7. Original ideas (`signal: "ORIGINAL"`, produced by `/ideate`)
+
+`ideate` is the **divergence** step — the mirror image of market-scan. Where the scan finds
+*what is proven*, ideate produces *what is possible*. **They never mix.** `ideate` is
+**autonomous**: it runs no question loop with the user (that belongs to concept-spec, §B /
+`concept-spec`). It takes the last scan's cards as raw material plus `idea-history` for
+dedupe, applies divergence operators, and pours out cards.
+
+- **Input:** the latest scan's cards (raw material) + `idea-history.jsonl` (dedupe).
+- **Output:** 3–5 cards tagged `signal: "ORIGINAL"` (magenta) → `docs/research/YYYY-MM-DD-ideas.md`
+  (source of truth) + an HTML report rendered from the shell.
+- **No evidence obligation.** An ORIGINAL card carries instead these **mandatory fields**:
+  - `parents` — which proven mechanic family it started from (raw material).
+  - `operator` — the divergence operator applied (see the five below).
+  - `leap` — one concrete sentence: what is DIFFERENT from the parent.
+  - `similarity_check` — the result of a "does anyone already do this?" search: `"partly
+    exists"` with a link, or `"not found"`.
+  - `test_hypothesis` — the moment a fake-ad video would show in 3 seconds.
+  - `signal_evidence` carries the fixed label `market-unvalidated — a fake-ad test will
+    produce the evidence` (render in the report's language, meaning verbatim).
+  - `why_might_hit` **and** `why_might_not` — an honest two-sided paragraph pair.
+
+### Divergence operators (each idea applies **at least one**; 5 ideas may **not** all use the same one)
+1. **TRANSPLANT** — fuse the mechanic with a layer from a totally different genre
+   (puzzle + roguelite drafting, puzzle + story progression, …).
+2. **INVERT** — flip the core rule (fill instead of empty; build a collision chain instead
+   of dodging collisions).
+3. **CONSTRAINT-SWAP** — change the constraint (real-time instead of turn-based; a flow
+   instead of one board; device tilt instead of finger taps).
+4. **THEME-MECHANIC FUSION** — make the theme a MECHANIC, not a visual skin (the theme's
+   rules must actually change play).
+5. **AUDIENCE-SHIFT** — re-cast the same mechanic for a completely different audience/context.
+
+### Anti-convergence bans (a candidate is NOT an idea if…)
+- The parent mechanic is unchanged and only the **theme** changed (that is the scan's
+  "themed-X" pattern, not an idea).
+- It is the literal sum of two existing games ("A + B's meta") — allowed **only** if the
+  `leap` sentence states something concretely new.
+- It is "X but better / more polished".
+- **Naming test:** if the idea can only be explained by naming an existing game, that is a
+  bad sign. The card **must** describe the idea in 2 sentences **without using any existing
+  game's name**.
+
+### Scoring
+ORIGINAL cards use the same four score slots, but `competition_gap` is replaced by
+**`novelty_risk`** (1–5: 5 = very new / very risky). **The quality bar is NOT applied** (the
+bar is the evidence step's tool); instead every card carries the honest
+`why_might_hit` / `why_might_not` pair.
+
+### Flow integration
+- ORIGINAL cards carry a `status` field; once `approved`, `/spec` runs normally.
+- They are written to `idea-history.jsonl` like any card; §3 dedupe applies unchanged.
+- README and `/pipeline-status` show the ORIGINAL flow.
+
+---
+
+## 8. Handoff — the "Next step" block
+
+Every skill ends its output with a short **Next step** block so the operator always knows
+the next move. The chain is:
+
+`market-scan → [approve] → (optional: ideate → [approve]) → spec → creatives → fake-ad test`
+
+- **`/market-scan` done:** "review the cards, set `status` in the markdown. → To diverge
+  into original ideas: `/ideate latest`. → To approve a card and go deep: `/spec <id>`."
+  (Both paths are legitimate; ideate is an **optional** middle layer, not required.)
+- **`/ideate` done:** "review the ORIGINAL cards, set one to `approved`. → Then `/spec <id>`.
+  Note: `/spec`'s brainstorm takes the card's `leap` sentence as its first question."
+- **`/spec` done:** "read the spec; if you approve → `/creatives <id>`. Want changes? say so
+  this session and the spec updates."
+- **`/creatives` done:** "produce the images (`image-prompts.md`), cut the video
+  (`video-plan.md`), run the fake-ad test. When you have the result, update state with
+  `/pipeline-status`."
+- **`/pipeline-status`:** suggests the next command per concept from its stage
+  (`pending` → awaiting approval; `approved` + no spec → `/spec`; spec + no creatives →
+  `/creatives`; creatives → fake-ad test). The dashboard shows a **"next" badge** on each
+  concept row.

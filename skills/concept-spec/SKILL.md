@@ -24,6 +24,14 @@ session language; keep ids, schema keys, and code identifiers in English (conven
 Run the brainstorm **before** writing any spec. This is the built-in loop; it is the
 primary path.
 
+> **Brainstorm lives ONLY here.** `ideate` (`/ideate`) is the autonomous divergence step and
+> runs no question loop; the interactive brainstorm belongs to concept-spec alone.
+
+**If the concept is an `ORIGINAL` card** (produced by `/ideate` — it has a `leap` field),
+the **first** brainstorm question is to validate and concretize that `leap` sentence: "your
+leap from `<parent>` is *'<leap>'* — is that still the bet, and what exactly does it change
+in the core loop?" Then continue the normal order below.
+
 **If the superpowers plugin is installed**, at the very start offer, in one line:
 *"If you want, I can open a deeper superpowers brainstorming session instead of my built-in
 loop — say the word."* If the user accepts, invoke `superpowers:brainstorming`, but when it
@@ -64,5 +72,9 @@ The spec targets a **test build**. Include:
 ## Step 3 — Update memory
 
 Update the concept's row in `docs/research/idea-history.jsonl` (its stage is now "spec").
-Update `docs/pipeline-state.md`. Tell the user the spec path and that the next step is
-`/creatives <id>`.
+Update `docs/pipeline-state.md`. Tell the user the spec path, then print the Next step block.
+
+## Next step (handoff — conventions §8)
+
+> **Next step:** read the spec. If you approve → `/creatives <id>`.
+> Want changes? Say so this session and the spec updates.

@@ -9,16 +9,19 @@ any single game. Every user grows their **own** idea pool from their **own** sca
 **idea memory** stops the same mechanic from quietly resurfacing under a new theme.
 
 ```
-  /market-scan          (human approval)         /spec <id>            /creatives <id>
- ┌────────────┐   set status: approved in   ┌────────────┐        ┌──────────────────┐
- │ research   │ ─────── the markdown ─────▶ │ concept    │ ─────▶ │ image + video    │
- │ concept    │                             │ spec.md    │        │ creative prompts │
- │ cards      │ ◀── idea memory blocks ──── │ (Unity)    │        │ (no misleading   │
- └────────────┘     repeats (Jaccard)       └────────────┘        │  ads)            │
-        │                                                          └──────────────────┘
-        └────────────────────  /pipeline-status  ◀───────────────────────┘
-                         (dashboard of every concept & stage)
+  /market-scan ──[approve]──▶ /spec <id> ──▶ /creatives <id> ──▶ fake-ad test
+   (proven cards)     ▲          (Unity spec)   (image + video,
+        │             │                          no misleading ads)
+        │  (optional) │
+        └─▶ /ideate ──┘        idea memory blocks repeats (Jaccard fingerprints)
+            ORIGINAL
+            ideas (magenta)
+
+  /pipeline-status  ·  dashboard of every concept, its stage & next step
 ```
+
+market-scan finds **what is proven**; `/ideate` diverges into **what is possible** (both
+paths lead to `/spec`). Nothing advances without your approval in the markdown.
 
 ---
 
@@ -73,6 +76,7 @@ either way.
 | Command | What it does |
 |---------|--------------|
 | `/market-scan [--manual]` | Research trending mobile-game mechanics across three time lenses, skip repeats via the idea memory, and produce scored concept cards — a markdown report (**source of truth**) + a self-contained HTML report. `--manual`: supply sources yourself when web search is unavailable. |
+| `/ideate [date\|latest]` | **Divergence step** (autonomous, no questions): take a scan's cards as raw material, apply divergence operators, and pour out 3–5 `ORIGINAL` (not-yet-proven) idea cards → `docs/research/<date>-ideas.md` + HTML. Optional middle layer between scan and spec. |
 | `/spec <concept-id>` | Turn an **approved** concept into a buildable spec. Runs a guided brainstorm (core loop, fail-state, difficulty, meta, ad-readability), then writes a Unity architecture + a phased roadmap to `docs/specs/<id>/spec.md`. |
 | `/creatives <concept-id>` | Generate the ad-creative prompt pack for a concept with a `spec.md`: a fixed `style-core`, 8–10 image prompts, and a 15–20s video ad plan. Never promises mechanics absent from the spec. |
 | `/pipeline-status` | Summarize which concept is at which stage and which approvals are pending, and render `docs/pipeline-dashboard.html`. |
@@ -85,13 +89,36 @@ Each command updates `docs/pipeline-state.md` when it finishes.
 
 1. **`/market-scan`** → produces `pending` concept cards in
    `docs/research/<date>-concepts.md` (+ an HTML report).
-2. **You approve.** Open the markdown and set `status: approved` (or `rejected`) on the
-   cards you want. **The markdown is the source of truth — the HTML is read-only.**
-3. **`/spec <id>`** → only runs on an `approved` concept. Answers a short brainstorm, then
-   writes `docs/specs/<id>/spec.md`.
-4. **`/creatives <id>`** → writes `docs/creatives/<id>/{style-core,image-prompts,video-plan}.md`.
-5. **`/pipeline-status`** anytime → refreshes `docs/pipeline-state.md` and
-   `docs/pipeline-dashboard.html`.
+2. **(optional) `/ideate latest`** → diverges into 3–5 `ORIGINAL` idea cards in
+   `docs/research/<date>-ideas.md` (+ an HTML report). Autonomous; runs no questions.
+3. **You approve.** Open the markdown (concepts or ideas) and set `status: approved` (or
+   `rejected`). **The markdown is the source of truth — the HTML is read-only.**
+4. **`/spec <id>`** → only runs on an `approved` concept. Answers a short brainstorm (for an
+   `ORIGINAL` card the first question is its `leap`), then writes `docs/specs/<id>/spec.md`.
+5. **`/creatives <id>`** → writes `docs/creatives/<id>/{style-core,image-prompts,video-plan}.md`.
+6. **Run the fake-ad test** with those creatives — that is the evidence an ORIGINAL idea was
+   always waiting for.
+7. **`/pipeline-status`** anytime → refreshes `docs/pipeline-state.md` and
+   `docs/pipeline-dashboard.html`, and tells you each concept's **next step**.
+
+Every skill ends with a **Next step** block, so you always know the next move.
+
+---
+
+## Proven vs. possible: `/market-scan` and `/ideate`
+
+The two idea sources are deliberately separate and never mix:
+
+- **`/market-scan`** is **evidence-gated** — a card needs dated sources and a passing score.
+  It finds *what is proven*.
+- **`/ideate`** is the **mirror**: it takes a scan's proven mechanics as raw material and
+  applies **divergence operators** (transplant, invert, constraint-swap, theme-mechanic
+  fusion, audience-shift) to produce *what is possible*. `ORIGINAL` cards carry **no evidence
+  obligation** — instead each states its `leap` from the parent, a `similarity_check`, a
+  3-second `test_hypothesis`, an honest *why it might hit / might not* pair, and the label
+  *"market-unvalidated — a fake-ad test will produce the evidence."* They score `novelty_risk`
+  in place of `competition_gap`, are never the "top pick", and feed the same `/spec` flow
+  once approved.
 
 ---
 
@@ -146,14 +173,17 @@ illustrative placeholders, not real store assets.
   marketplace.json               Marketplace manifest (this repo is its own marketplace)
 skills/
   shared/conventions.md          Shared contract — schema, fingerprint/Jaccard, HTML pattern
-  shared/template.html           Report shell — copied + JSON-filled for every scan
+  shared/template.html           Report shell — copied + JSON-filled for every scan/ideate
   market-scan/SKILL.md
+  ideate/SKILL.md                Divergence step → ORIGINAL idea cards
   concept-spec/SKILL.md
   creative-prompts/SKILL.md
 commands/
-  market-scan.md  spec.md  creatives.md  pipeline-status.md
-examples/                        Rendered sample of what HitForge produces in *your* project
-  2026-07-20-report.html         Rendered sample report (open it in a browser)
+  market-scan.md  ideate.md  spec.md  creatives.md  pipeline-status.md
+examples/                        Rendered samples of what HitForge produces in *your* project
+  2026-07-20-report.html         Rendered sample scan report
+  2026-07-20-ideas-report.html   Rendered sample ORIGINAL-ideas report (/ideate)
+  2026-07-20-ideas.md            Sample ideas markdown (source of truth)
   idea-history.jsonl             Sample idea memory
   pipeline-state.md              Sample stage snapshot
 docs/

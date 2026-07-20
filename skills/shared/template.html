@@ -25,6 +25,7 @@
     --sig-evergreen:#3d8bff;/* EVERGREEN→ blue          */
     --sig-revisit:#b06bff;  /* REVISIT  → purple        */
     --sig-synthesis:#1fd6c4;/* SYNTHESIS→ turquoise      */
+    --sig-original:#ff5db1; /* ORIGINAL → magenta        */
     --st-pending:#7c8a99; --st-approved:#2fd07a; --st-rejected:#ff5470; --st-revisit:#b06bff;
 
     --r-sm:6px; --r-md:11px; --r-lg:15px;
@@ -171,6 +172,28 @@
   .preview{font-size:12px;color:var(--muted);font-style:italic;border:1px dashed var(--line2);
     border-radius:var(--r-sm);padding:9px 12px;line-height:1.5}
   .preview .ev-tag{color:var(--ember);font-style:normal}
+  /* original (ideate / divergence) plates */
+  .plate.original{border-color:rgba(255,93,177,.42)}
+  .plate.original .plate-head{background:linear-gradient(180deg,rgba(255,93,177,.07),transparent)}
+  .plate.original .parents{color:var(--sig-original)}
+  .plate.original .parents .p{background:rgba(255,93,177,.1);border-color:rgba(255,93,177,.32)}
+  .evidence.orig{border-left-color:var(--sig-original);
+    background:linear-gradient(90deg,rgba(255,93,177,.1),transparent);color:#ffd6ec}
+  .evidence.orig .ev-tag{color:var(--sig-original)}
+  .op{align-self:flex-start;display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);
+    font-size:9.5px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--sig-original);
+    border:1px solid rgba(255,93,177,.4);background:rgba(255,93,177,.1);border-radius:5px;padding:2px 9px}
+  .leap{font-size:12.5px;color:#ffe3f2;background:linear-gradient(90deg,rgba(255,93,177,.1),transparent);
+    border-left:3px solid var(--sig-original);padding:9px 12px;border-radius:0 var(--r-sm) var(--r-sm) 0;line-height:1.5}
+  .leap .ev-tag{color:var(--sig-original)}
+  .simcheck{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.2px}
+  .simcheck b{color:var(--gold);font-weight:600}
+  .honest{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .honest .h{border:1px solid var(--line);border-radius:var(--r-sm);padding:9px 11px;font-size:11.5px;line-height:1.5}
+  .honest .hit{background:rgba(47,208,122,.06);border-color:rgba(47,208,122,.28);color:#c9f0d8}
+  .honest .miss{background:rgba(255,84,112,.06);border-color:rgba(255,84,112,.28);color:#ffc9d2}
+  .honest .h .t{display:block;font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+  .honest .hit .t{color:var(--sig-rising)} .honest .miss .t{color:var(--st-rejected)}
   /* image thumbnails (optional) */
   .thumbs{display:flex;gap:8px;flex-wrap:wrap}
   .thumbs a{display:block;width:76px;height:76px;border:1px solid var(--line);
@@ -276,6 +299,7 @@
     .ptitle{max-width:100%}
     .controls{position:static}
     .kicker,.sub{padding-left:0}
+    .honest{grid-template-columns:1fr}
   }
 </style>
 </head>
@@ -296,6 +320,7 @@
       <span style="color:var(--sig-evergreen)"><b></b>EVERGREEN</span>
       <span style="color:var(--sig-revisit)"><b></b>REVISIT</span>
       <span style="color:var(--sig-synthesis)"><b></b>SYNTHESIS</span>
+      <span style="color:var(--sig-original)"><b></b>ORIGINAL</span>
     </div>
   </header>
 
@@ -458,15 +483,17 @@
 
   var SIG = { "NEW-HOT":getCss('--sig-newhot'), "RISING":getCss('--sig-rising'),
               "EVERGREEN":getCss('--sig-evergreen'), "REVISIT":getCss('--sig-revisit'),
-              "SYNTHESIS":getCss('--sig-synthesis') };
+              "SYNTHESIS":getCss('--sig-synthesis'), "ORIGINAL":getCss('--sig-original') };
   var STA = { pending:getCss('--st-pending'), approved:getCss('--st-approved'),
               rejected:getCss('--st-rejected'), revisit:getCss('--st-revisit') };
   var SLABEL = { video_clarity:"Video clarity", production_ease:"Production ease",
-                 competition_gap:"Competition gap", meta_potential:"Meta potential" };
+                 competition_gap:"Competition gap", novelty_risk:"Novelty risk",
+                 meta_potential:"Meta potential" };
+  var SORDER = ["video_clarity","production_ease","competition_gap","novelty_risk","meta_potential"];
   function getCss(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim() || '#888'; }
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-  function total(c){ var s=c.scores||{}; return (s.video_clarity||0)+(s.production_ease||0)+(s.competition_gap||0)+(s.meta_potential||0); }
+  function total(c){ var s=c.scores||{},t=0; for(var k in s){ if(typeof s[k]==='number') t+=s[k]; } return t; }
   function badge(t,color){ return '<span class="badge" style="background:'+color+'1f;color:'+color+';border:1px solid '+color+'66">'+esc(t)+'</span>'; }
   function domain(u){ try{ return new URL(u).hostname.replace(/^www\./,''); }catch(e){ return ''; } }
   function storeName(u){ u=(u||'').toLowerCase();
@@ -475,9 +502,9 @@
   function refList(c){ return (c.reference_games||[]).map(function(r){ return (typeof r==='string')?{name:r}:(r||{}); }); }
 
   var cards = data.cards||[];
-  // Top pick = highest heat among EVIDENCE-BACKED cards; a market-unvalidated
-  // SYNTHESIS card never claims the ribbon.
-  var topId = cards.filter(function(c){ return c.signal!=='SYNTHESIS'; })
+  // Top pick = highest heat among EVIDENCE-BACKED cards; market-unvalidated
+  // SYNTHESIS and ORIGINAL cards never claim the ribbon.
+  var topId = cards.filter(function(c){ return c.signal!=='SYNTHESIS' && c.signal!=='ORIGINAL'; })
     .reduce(function(best,c){ return (!best||total(c)>total(best))?c:best; }, null);
   topId = topId ? topId.id : null;
 
@@ -514,7 +541,7 @@
       c.appendChild(b);
     });
   }
-  mkPills('signalFilters','signal',['ALL','NEW-HOT','RISING','EVERGREEN','REVISIT','SYNTHESIS']);
+  mkPills('signalFilters','signal',['ALL','NEW-HOT','RISING','EVERGREEN','REVISIT','SYNTHESIS','ORIGINAL']);
   mkPills('statusFilters','status',['ALL','pending','approved','rejected','revisit']);
 
   document.getElementById('q').addEventListener('input', function(e){ state.q=e.target.value.toLowerCase().trim(); render(); });
@@ -522,8 +549,8 @@
 
   function cardHTML(c, i){
     var isTop = c.id===topId;
-    var scoreRows = Object.keys(SLABEL).map(function(k){
-      var v=(c.scores&&c.scores[k])||0;
+    var scoreRows = SORDER.filter(function(k){ return c.scores && (k in c.scores); }).map(function(k){
+      var v=c.scores[k]||0;
       return '<div class="srow"><span>'+SLABEL[k]+'</span>'+
         '<span class="track"><span class="fill" style="width:'+(v/5*100)+'%"></span></span>'+
         '<span class="num">'+v+'</span></div>';
@@ -535,11 +562,19 @@
         '</a> '+(d?'<span class="d">'+d+'</span> ':'')+'<span class="d">('+esc(s.date)+')</span></div>'; }).join('');
     var sim=c.similar_to?'<div class="sim">⚠ similar to <b>'+esc(c.similar_to)+'</b> — check it is genuinely distinct</div>':'';
     var manual=(c.source==='manual entry')?' <span class="manual">manual</span>':'';
-    var isSyn=c.signal==='SYNTHESIS';
+    var isSyn=c.signal==='SYNTHESIS', isOrig=c.signal==='ORIGINAL';
+    var pLabel = isSyn ? '⚒ forged from' : (isOrig ? '◈ raw material' : '↳ from');
     var parents=(c.parents&&c.parents.length)
-      ? '<div class="parents">⚒ forged from '+c.parents.map(function(p){return '<span class="p">'+esc(p)+'</span>';}).join(' + ')+'</div>' : '';
+      ? '<div class="parents">'+pLabel+' '+c.parents.map(function(p){return '<span class="p">'+esc(p)+'</span>';}).join(' + ')+'</div>' : '';
     var combo=c.why_combination?'<div class="combo"><span class="ev-tag">Why combine</span>'+esc(c.why_combination)+'</div>':'';
     var preview=c.visual_preview?'<div class="preview"><span class="ev-tag">Visual preview</span>'+esc(c.visual_preview)+'</div>':'';
+    var op=c.operator?'<span class="op">◆ '+esc(c.operator)+'</span>':'';
+    var leap=c.leap?'<div class="leap"><span class="ev-tag">Leap from parent</span>'+esc(c.leap)+'</div>':'';
+    var simcheck=c.similarity_check?'<div class="simcheck">Anyone doing this? <b>'+esc(c.similarity_check)+'</b></div>':'';
+    var testhyp=c.test_hypothesis?'<div class="preview"><span class="ev-tag">3-sec ad test</span>'+esc(c.test_hypothesis)+'</div>':'';
+    var honest=(c.why_might_hit||c.why_might_not)
+      ? '<div class="honest"><div class="h hit"><span class="t">Why it might hit</span>'+esc(c.why_might_hit||'—')+'</div>'+
+        '<div class="h miss"><span class="t">Why it might not</span>'+esc(c.why_might_not||'—')+'</div></div>' : '';
     var thumbs=(c.images&&c.images.length)
       ? '<div class="thumbs">'+c.images.map(function(im){return '<a href="'+esc(im.src)+'" target="_blank" rel="noopener" title="'+esc(im.caption||'')+'"><img src="'+esc(im.src)+'" alt="'+esc(im.caption||'')+'" loading="lazy"></a>';}).join('')+'</div>' : '';
     var refs=refList(c);
@@ -555,7 +590,7 @@
           return '<div class="ref">'+head+slides+'</div>';
         }).join('')+'</div></div>'
       : '';
-    return '<article class="plate'+(isTop?' top':'')+(isSyn?' synthesis':'')+'" style="--i:'+i+'" data-signal="'+esc(c.signal)+'" data-status="'+esc(c.status)+'">'+
+    return '<article class="plate'+(isTop?' top':'')+(isSyn?' synthesis':'')+(isOrig?' original':'')+'" style="--i:'+i+'" data-signal="'+esc(c.signal)+'" data-status="'+esc(c.status)+'">'+
       (isTop?'<div class="ribbon">Top pick</div>':'')+
       '<div class="plate-head"><div class="ph-row">'+
         '<h3 class="ptitle">'+esc(c.title)+'</h3>'+
@@ -563,12 +598,17 @@
       '</div><div class="idrow"><span class="pid">'+esc(c.id)+'</span>'+manual+
         '<button class="copy" data-id="'+esc(c.id)+'">⧉ /spec</button></div></div>'+
       '<div class="plate-body">'+
-        '<div class="evidence'+(isSyn?' syn':'')+'"><span class="ev-tag">'+(isSyn?'Inherited':'Signal')+'</span>'+esc(c.signal_evidence||'')+'</div>'+
+        '<div class="evidence'+(isSyn?' syn':(isOrig?' orig':''))+'"><span class="ev-tag">'+(isSyn?'Inherited':(isOrig?'Unvalidated':'Signal'))+'</span>'+esc(c.signal_evidence||'')+'</div>'+
+        op+
         parents+
+        leap+
         '<p class="mech">'+esc(c.mechanic||'')+'</p>'+
         combo+
         '<div class="fp">'+fps+'</div>'+sim+
+        simcheck+
         preview+
+        testhyp+
+        honest+
         thumbs+
         '<div class="scores"><div class="sc-head"><span class="sc-t">Heat score</span>'+
           '<span class="sc-v"><b>'+total(c)+'</b>/20</span></div>'+scoreRows+'</div>'+
