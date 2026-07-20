@@ -57,8 +57,8 @@ accepts the short form `/market-scan` when the name is unambiguous.)
 > the skills won't resolve. The plugin install is the supported path.
 
 **Requirements:** Claude Code with web search enabled (for `/market-scan`). No other
-dependencies; the HTML reports open offline (the report template pulls one web font from
-Google Fonts, with a system-font fallback if you're offline).
+dependencies; the HTML reports are self-contained and open offline (system-font stack, no
+CDN, no external fonts).
 
 ### Optional: superpowers plugin
 The [superpowers](https://github.com/anthropics) `brainstorming` skill is **optional**. If
@@ -123,14 +123,14 @@ carded).
   marketplace.json               Marketplace manifest (this repo is its own marketplace)
 skills/
   shared/conventions.md          Shared contract — schema, fingerprint/Jaccard, HTML pattern
+  shared/template.html           Report shell — copied + JSON-filled for every scan
   market-scan/SKILL.md
   concept-spec/SKILL.md
   creative-prompts/SKILL.md
 commands/
   market-scan.md  spec.md  creatives.md  pipeline-status.md
-examples/                        Reference of what HitForge produces in *your* project
-  template.html                  Self-contained report template
-  2026-07-20-report.html         Rendered sample report
+examples/                        Rendered sample of what HitForge produces in *your* project
+  2026-07-20-report.html         Rendered sample report (open it in a browser)
   idea-history.jsonl             Sample idea memory
   pipeline-state.md              Sample stage snapshot
 docs/

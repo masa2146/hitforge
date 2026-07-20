@@ -100,10 +100,12 @@ uncertainty explicitly in the card. Candidates that fail the bar go in a one-lin
    **source of truth**; approvals happen here by editing `status:`.
 2. **Append** each produced card as one line to `docs/research/idea-history.jsonl`
    (schema §2), `status: pending`.
-3. **Render HTML:** copy `docs/research/template.html` to
-   `docs/research/YYYY-MM-DD-report.html` and fill **only** the embedded JSON block
-   (conventions §5). If `template.html` is missing, create it first from the pattern in
-   conventions §5.
+3. **Render HTML:** copy the shipped shell `${CLAUDE_PLUGIN_ROOT}/skills/shared/template.html`
+   to `docs/research/YYYY-MM-DD-report.html` and fill **only** the embedded JSON block
+   (conventions §5) — never rewrite the HTML/CSS/JS, only the JSON. If that file cannot be
+   read (e.g. running the skills copied outside a plugin), fall back to
+   `docs/research/template.html`, and only if that is also missing rebuild the shell from
+   the pattern in conventions §5.
 4. Update `docs/pipeline-state.md` (add the scan + its pending concepts).
 5. Tell the user the exact file paths and remind them: **approve/reject by editing the
    `status:` field in the markdown**, then run `/spec <id>` on an approved concept.

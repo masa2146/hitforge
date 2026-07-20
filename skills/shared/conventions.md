@@ -112,10 +112,13 @@ mirror it into `idea-history.jsonl`. **HTML is read-only** and never authoritati
 
 ## 5. Single-file HTML pattern
 
-Both `docs/research/template.html` and `docs/pipeline-dashboard.html` follow this pattern:
+The report shell **ships with the plugin** at `${CLAUDE_PLUGIN_ROOT}/skills/shared/template.html`.
+market-scan renders a report by **copying that shell** and replacing only its JSON block — it
+does not regenerate the HTML/CSS/JS. The dashboard (`docs/pipeline-dashboard.html`, built by
+`/pipeline-status`) follows the same single-file pattern. Both obey:
 
-- **One file, zero external dependencies.** No CDN, no external CSS/JS/fonts. Opens offline
-  by double-click.
+- **One file, zero external dependencies.** No CDN, no external CSS/JS/fonts (use a
+  system-font stack). Opens offline by double-click.
 - **Inline `<style>` + vanilla `<script>`.** No frameworks.
 - **Data lives in a single embedded JSON block** near the end of the file:
   ```html
